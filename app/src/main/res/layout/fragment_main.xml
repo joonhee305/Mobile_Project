@@ -48,6 +48,7 @@
                     />
             </LinearLayout>
             <Button
+                android:id="@+id/addList"
                 android:layout_width="200dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
