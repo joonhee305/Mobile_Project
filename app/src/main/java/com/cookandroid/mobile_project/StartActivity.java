@@ -3,6 +3,7 @@ package com.cookandroid.mobile_project;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -46,11 +47,13 @@ public class StartActivity extends Activity {
     String breakfastTime,lunchTime,dinnerTime,exerciseTime;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
+    Intent mainActivity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        mainActivity = new Intent(this, MainActivity.class);
         myHelper=new myDBHelper(this);
         setWidget=new SetWidget();
         //기록하기
@@ -183,6 +186,7 @@ public class StartActivity extends Activity {
                     sqLiteDatabase.execSQL("insert into routineTBL values('운동','운동',"+exerDates+",'"+exerciseTime+"');");
                 }
                 sqLiteDatabase.close();
+                startActivity(mainActivity);
                 finish();
             }
         });

@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     // 송지민이 추가한 메인 화면의 툴바와 프레그먼트
     Toolbar toolbar;
     MainFragment mainFragment;
+    Button reset;
     // 여기까지
     public SharedPreferences prefs;
     @Override
@@ -26,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // 송지민이 추가한 프레그먼트 관련 코드
         toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
 
         mainFragment = new MainFragment();
+
+        reset = (Button) findViewById(R.id.bt_Reset);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
         TabLayout tabs = findViewById(R.id.tabs);
@@ -64,10 +69,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prefs.edit().putBoolean("isFirstRun",true).apply();
+            }
+        });
+
         //여기까지 
         prefs=getSharedPreferences("Pref",MODE_PRIVATE);
         checkFirstRun();
+
     }
 
     public void checkFirstRun(){
@@ -75,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
         if(isFirstRun){
             Intent newIntent=new Intent(getApplicationContext(),StartActivity.class);
             startActivity(newIntent);
+            finish();
 
             //두번째 실행부터 실행하지 않으려면 밑에 주석 해제
-            //prefs.edit().putBoolean("isFirstRun",false).apply();
+            prefs.edit().putBoolean("isFirstRun",false).apply();
         }
     }
 

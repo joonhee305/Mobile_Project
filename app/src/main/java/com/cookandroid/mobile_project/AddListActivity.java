@@ -17,19 +17,54 @@ import androidx.annotation.Nullable;
 import com.cookandroid.mobile_project.R;
 import com.google.android.material.tabs.TabLayout;
 
+import org.w3c.dom.Text;
+
 public class AddListActivity extends Activity {
 
     CheckBox chk_illjung, chk_pill;
     LinearLayout container;
+    Button btn_save;
+    TextView test;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addlist);
 
+
+
         container = (LinearLayout) findViewById(R.id.container);
         chk_illjung = (CheckBox) findViewById(R.id.check_illjung);
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
+        btn_save = (Button) findViewById(R.id.btn_save);
+        test = (TextView) findViewById(R.id.tv_test);
+
+        //illjung
+        LinearLayout linear_write_todo = new LinearLayout(this);
+        linear_write_todo.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout linear_when_todo = new LinearLayout(this);
+        linear_when_todo.setOrientation(LinearLayout.VERTICAL);
+
+        TextView tv_write_todo = new TextView(this);
+        tv_write_todo.setText("해야 할 일을 적어주세요");
+        tv_write_todo.setTextSize(25);
+        TextView tv_when_todo = new TextView(this);
+        tv_when_todo.setText("언제 해야하는지 설정해주세요");
+        tv_when_todo.setTextSize(25);
+
+        EditText edt_write_todo = new EditText(this);
+        edt_write_todo.setHint("해야 할 일을 적어주세요");
+
+
+
+        TimePicker set_time_todo = new TimePicker(this);
+        set_time_todo.setMinimumHeight(80);
+
+        linear_write_todo.addView(tv_write_todo);
+        linear_write_todo.addView(edt_write_todo);
+
+        linear_when_todo.addView(tv_when_todo);
+        linear_when_todo.addView(set_time_todo);
 
         //pill
         LinearLayout linear_pill = new LinearLayout(this);
@@ -121,35 +156,7 @@ public class AddListActivity extends Activity {
         linear_pillTime.addView(afd);
         linear_pillTime.addView(afs);
 
-        //illjung
-        LinearLayout linear_write_todo = new LinearLayout(this);
-        linear_write_todo.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout linear_when_todo = new LinearLayout(this);
-        linear_when_todo.setOrientation(LinearLayout.VERTICAL);
 
-        TextView tv_write_todo = new TextView(this);
-        tv_write_todo.setText("해야 할 일을 적어주세요");
-        tv_write_todo.setTextSize(25);
-        TextView tv_when_todo = new TextView(this);
-        tv_when_todo.setText("언제 해야하는지 설정해주세요");
-        tv_when_todo.setTextSize(25);
-
-        EditText edt_write_todo = new EditText(this);
-        edt_write_todo.setHint("해야 할 일을 적어주세요");
-
-        TimePicker set_time_todo = new TimePicker(this);
-        set_time_todo.setMinimumHeight(80);
-
-        linear_write_todo.addView(tv_write_todo);
-        linear_write_todo.addView(edt_write_todo);
-
-        linear_when_todo.addView(tv_when_todo);
-        linear_when_todo.addView(set_time_todo);
-
-
-
-
-//        linear_illjung = (LinearLayout) findViewById(R.id.li)
         chk_illjung.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -191,6 +198,12 @@ public class AddListActivity extends Activity {
                     container.setVisibility(View.INVISIBLE);
                     container.removeAllViews();
                 }
+            }
+        });
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                test.setText(edt_write_todo.getText());
             }
         });
     }
