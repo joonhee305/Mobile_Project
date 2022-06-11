@@ -2,7 +2,9 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
 
@@ -34,6 +37,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class StartActivity extends Activity {
+    public static Context context;
     SetWidget setWidget;
     Button btnMedadd,btnMem,btnSave,btnCancle,btnReset,btnGet;
     EditText edtMedName;
@@ -46,11 +50,12 @@ public class StartActivity extends Activity {
     String breakfastTime,lunchTime,dinnerTime,exerciseTime;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
-
+    Intent mainActivity;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        mainActivity = new Intent(this, MainActivity.class);
         myHelper=new myDBHelper(this);
         setWidget=new SetWidget();
         //기록하기
@@ -183,6 +188,7 @@ public class StartActivity extends Activity {
                     sqLiteDatabase.execSQL("insert into routineTBL values('운동','운동',"+exerDates+",'"+exerciseTime+"');");
                 }
                 sqLiteDatabase.close();
+                startActivity(mainActivity);
                 finish();
             }
         });
@@ -363,28 +369,6 @@ public class StartActivity extends Activity {
             name=n;
             dates=d;
             times=t;
-        }
-    }
-    public class myDBHelper extends SQLiteOpenHelper {
-        public myDBHelper(Context context){
-            super(context, "groupDB",null,1);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            //루틴 테이블 //타입, 이름, 요일, 시간
-            db.execSQL("create  table if not exists routineTBL(rType Char(20), rName Char(20), rDate int, rTime Char(20)) ");
-            //당일 테이블 //타입, 이름, 시간
-            db.execSQL("create table if not exists toDayTBL(tType Char(20), tName Char(20), tTime Char(20))");
-            //기록 테이블 //타입,이름,날짜,시간,값
-            db.execSQL("create table if not exists historyTBL(hType Char(20) , hName Char(20), hDate Char(20), hTime Char(40) primary key, hData Char(20))");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("drop table if exists routineTBL");
-            db.execSQL("drop table if exists historyTBL");
-            onCreate(db);
         }
     }
 }
