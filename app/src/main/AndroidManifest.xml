@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".StartActivity" android:label="StartActivity"></activity>
+        <activity android:name=".AddListActivity" android:label="AddListActivity"></activity>
     </application>
 
 </manifest>
