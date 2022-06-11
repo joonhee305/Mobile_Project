@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTabUnselected(TabLayout.Tab tab) {
 
             }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
@@ -79,5 +79,9 @@ public class MainActivity extends AppCompatActivity {
             //두번째 실행부터 실행하지 않으려면 밑에 주석 해제
             //prefs.edit().putBoolean("isFirstRun",false).apply();
         }
+    }
+
+    public void openDB(){
+        SQLiteDatabase rootinDatabase;
     }
 }
