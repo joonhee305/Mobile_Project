@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
-                android:id="@+id/choice_Diet"
+                android:id="@+id/layoutDiet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -44,7 +44,7 @@
                             android:layout_gravity="center_vertical"
                             />
                         <TimePicker
-                            android:id="@+id/breakfast_timePicker"
+                            android:id="@+id/breakTimePicker"
                             android:layout_width="wrap_content"
                             android:layout_height="130dp"
                             android:timePickerMode="spinner"
@@ -59,7 +59,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"/>
                         <TimePicker
-                            android:id="@+id/lunch_timePicker"
+                            android:id="@+id/lunchTimePicker"
                             android:layout_width="wrap_content"
                             android:layout_height="130dp"
                             android:timePickerMode="spinner">
@@ -73,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"/>
                         <TimePicker
-                            android:id="@+id/dinner_timePicker"
+                            android:id="@+id/dinnerTimePicker"
                             android:layout_width="wrap_content"
                             android:layout_height="130dp"
                             android:timePickerMode="spinner">
@@ -82,24 +82,31 @@
                 </TableLayout>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/choice_Med"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
                     android:text="매일 드시는 약이 있으신가요?"
                     android:layout_margin="5dp"/>
-                <Button
-                    android:id="@+id/btn_MedAdd"
+                <LinearLayout
+                    android:id="@+id/layoutMed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                </LinearLayout>
+                <Button
+                    android:id="@+id/btnMedAdd"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="추가"/>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/choice_Exer"
+                android:id="@+id/layoutExer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -115,44 +122,44 @@
                     android:layout_margin="10dp">
                     <TableRow>
                         <CheckBox
-                            android:id="@+id/exer_Mon"
+                            android:id="@+id/exerMon"
                             android:text="월"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
                         <CheckBox
-                            android:id="@+id/exer_Tue"
+                            android:id="@+id/exerTue"
                             android:text="화"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
                         <CheckBox
-                            android:id="@+id/exer_Wed"
+                            android:id="@+id/exerWed"
                             android:text="수"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
                         <CheckBox
-                            android:id="@+id/exer_Thu"
+                            android:id="@+id/exerThu"
                             android:text="목"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
                     </TableRow>
                     <TableRow>
                         <CheckBox
-                            android:id="@+id/exer_Fri"
+                            android:id="@+id/exerFri"
                             android:text="금"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
                         <CheckBox
-                            android:id="@+id/exer_Sat"
+                            android:id="@+id/exerSat"
                             android:text="토"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
                         <CheckBox
-                            android:id="@+id/exer_Sun"
+                            android:id="@+id/exerSun"
                             android:text="일"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
                         <CheckBox
-                            android:id="@+id/exer_Every"
+                            android:id="@+id/exerEvery"
                             android:text="매일"
                             android:layout_weight="1"
                             android:layout_margin="5dp"/>
@@ -165,14 +172,14 @@
                     android:text="운동은 몇시에 하시나요?"
                     android:layout_margin="5dp"/>
                 <TimePicker
-                    android:id="@+id/exer_timePicker"
+                    android:id="@+id/exerTimePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:timePickerMode="spinner">
                 </TimePicker>
             </LinearLayout>
             <Button
-                android:id="@+id/btn_Mem"
+                android:id="@+id/btnMem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="32dp"
