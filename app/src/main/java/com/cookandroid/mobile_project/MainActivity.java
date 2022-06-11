@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainFragment = new MainFragment();
 
-        reset = (Button) findViewById(R.id.bt_Reset);
+        reset = (Button) findViewById(R.id.btnReset);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
         TabLayout tabs = findViewById(R.id.tabs);
@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
                 if(position == 0){
                     selected = mainFragment;
                 } else if(position == 1){
-
+                    selected = mainFragment;
                 }else if(position == 2){
-
+                    selected = mainFragment;
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.container,selected).commit();
             }
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //여기까지 
+        //여기까지
         prefs=getSharedPreferences("Pref",MODE_PRIVATE);
         checkFirstRun();
 

@@ -38,7 +38,7 @@
                 app:tabSelectedTextColor="?colorAccent"
                 app:tabTextColor="?colorPrimary"/>
             <Button
-                android:id="@+id/bt_Reset"
+                android:id="@+id/btnReset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="reset"

@@ -28,31 +28,31 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
 
-        Button btn_addList = (Button) v.findViewById(R.id.addList);
+        Button btn_addList = (Button) v.findViewById(R.id.btnAddList);
         LinearLayout layoutDoing=v.findViewById(R.id.layoutDoing);
 
-        Toast.makeText(getActivity(),"떤냐?",Toast.LENGTH_SHORT);
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
-        Cursor cursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
-        int idx=0;
-        while(cursor.moveToNext()){
-            String val="";
-            for(int i=0;i<4;i++){
-                val+= cursor.getString(i)+" ";
-            }
-            TextView t=new TextView(getActivity());
-            t.setText(val);
-            layoutDoing.addView(t);
-            Toast.makeText(getActivity(),idx+"성공",Toast.LENGTH_SHORT);
-            idx+=1;
-        }
+//        //임시
+//        Cursor cursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
+//        int idx=0;
+//        while(cursor.moveToNext()){
+//            String val="";
+//            for(int i=0;i<4;i++){
+//                val+= cursor.getString(i)+" ";
+//            }
+//            TextView t=new TextView(getActivity());
+//            t.setText(val);
+//            layoutDoing.addView(t);
+//            Toast.makeText(getActivity(),idx+"성공",Toast.LENGTH_SHORT).show();
+//            idx+=1;
+//        }
         btn_addList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Intent intent = new Intent(getActivity(), AddListActivity.class);
 //                startActivity(intent);
-                Toast.makeText(getActivity(),"이건가?",Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),"이건가?",Toast.LENGTH_SHORT).show();
             }
         });
 
