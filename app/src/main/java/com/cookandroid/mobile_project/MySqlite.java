@@ -16,12 +16,12 @@ public class MySqlite {
         }
         @Override
         public void onCreate(SQLiteDatabase db) {
-            //루틴 테이블
-            db.execSQL("create table routineTBL(rType Char(20) primary key, rName Char(20), rDate int, rTime Char(20) primary key) ");
-            //당일 테이블
+            //루틴 테이블 //타입, 이름, 요일, 시간
+            db.execSQL("create table routineTBL(rkey char(50) primary key, rType Char(20) , rName Char(20), rDate int, rTime Char(20)) ");
+            //당일 테이블 //타입, 이름, 시간
             db.execSQL("create table toDayTBL(tType Char(20), tName Char(20), tTime Char(20))");
-            //기록 테이블
-            db.execSQL("create table historyTBL(hType Char(20) , hName Char(20), hDate Char(20), hTime Char(20) primary key, hData Char(20))");
+            //기록 테이블 //타입,이름,날짜,시간,값
+            db.execSQL("create table historyTBL(hType Char(20) , hName Char(20), hDate Char(20), hTime Char(40) primary key, hData Char(20))");
         }
 
         @Override

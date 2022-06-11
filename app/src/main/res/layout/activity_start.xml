@@ -37,7 +37,7 @@
                     android:layout_margin="10dp">
                     <TableRow>
                         <CheckBox
-                            android:id="@+id/breakfast"
+                            android:id="@+id/chkBreakfast"
                             android:text="아침"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                     </TableRow>
                     <TableRow>
                         <CheckBox
-                            android:id="@+id/lunch"
+                            android:id="@+id/chkLunch"
                             android:text="점심"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                     </TableRow>
                     <TableRow>
                         <CheckBox
-                            android:id="@+id/dinner"
+                            android:id="@+id/chkDinner"
                             android:text="저녁"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -178,12 +178,36 @@
                     android:timePickerMode="spinner">
                 </TimePicker>
             </LinearLayout>
-            <Button
-                android:id="@+id/btnMem"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="32dp"
-                android:text="기록" />
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnMem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="32dp"
+                    android:text="기록" />
+                <Button
+                    android:id="@+id/btnReset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="32dp"
+                    android:text="초기화" />
+                <Button
+                    android:id="@+id/btnGet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="32dp"
+                    android:text="가져오기" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutTest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
