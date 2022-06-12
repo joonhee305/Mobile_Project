@@ -12,8 +12,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     MainFragment mainFragment;
     Button reset;
+    TextView titleDate;
     // 여기까지
     public SharedPreferences prefs;
     @Override
@@ -28,15 +33,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // 송지민이 추가한 프레그먼트 관련 코드
+
+        //재시작 확인
+        prefs=getSharedPreferences("Pref",MODE_PRIVATE);
+        checkFirstRun();
+        //바 설정
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //날짜
+        long now=System.currentTimeMillis();
+        Date date= new Date(now);
+        SimpleDateFormat sdf=new SimpleDateFormat("MM월 dd일 EE");
+        String nowDate=sdf.format(date);
+        titleDate=findViewById(R.id.titleDate);
+        titleDate.setText(nowDate.toString());
 
+        //액션바 설정
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
 
+        //플래그먼트
         mainFragment = new MainFragment();
 
-        reset = (Button) findViewById(R.id.btnReset);
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
         TabLayout tabs = findViewById(R.id.tabs);
@@ -70,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //리셋
+        reset = (Button) findViewById(R.id.btnReset);
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //여기까지
-        prefs=getSharedPreferences("Pref",MODE_PRIVATE);
-        checkFirstRun();
 
     }
 
