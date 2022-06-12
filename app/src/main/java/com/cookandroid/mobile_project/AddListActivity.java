@@ -2,6 +2,8 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,10 @@ public class AddListActivity extends Activity {
     LinearLayout container;
     Button btn_save;
     TextView test;
+    Boolean boolToDo = false, boolPill = false;
+    SQLiteDatabase sqLiteDatabase;
+    SQLiteOpenHelper myHelper;
+    String getTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,6 +163,8 @@ public class AddListActivity extends Activity {
         linear_pillTime.addView(afs);
 
 
+
+
         chk_illjung.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -165,16 +173,22 @@ public class AddListActivity extends Activity {
                     container .setVisibility(View.VISIBLE);
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);
+                    boolToDo = true;
+                    boolPill = false;
                 }
                 else if(chk_illjung.isChecked()==false && chk_pill.isChecked() == true){
                     container .setVisibility(View.VISIBLE);
                     container.addView(linear_pillName);
                     container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
+                    boolToDo = false;
+                    boolPill = true;
                 }
                 else{
                     container.setVisibility(View.INVISIBLE);
                     container.removeAllViews();
+                    boolToDo = false;
+                    boolPill = false;
                 }
             }
 
@@ -188,22 +202,42 @@ public class AddListActivity extends Activity {
                     container.addView(linear_pillName);
                     container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
+                    boolToDo = true;
+                    boolPill = false;
                 }
                 else if(chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
                     container .setVisibility(View.VISIBLE);
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);
+                    boolToDo = false;
+                    boolPill = true;
                 }
                 else{
                     container.setVisibility(View.INVISIBLE);
                     container.removeAllViews();
+                    boolToDo = false;
+                    boolPill = false;
                 }
             }
         });
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                test.setText(edt_write_todo.getText());
+                sqLiteDatabase=myHelper.getWritableDatabase();
+                myHelper.onUpgrade(sqLiteDatabase,1,2);
+                if(boolToDo){
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정',"+edt_write_todo.getText()+",getTime);");
+                    test.setText(getTime);
+                }
+
+
+            }
+        });
+
+        set_time_todo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker timePicker, int hourOfDay, int minute) {
+                getTime = hourOfDay+":"+minute;
             }
         });
     }
