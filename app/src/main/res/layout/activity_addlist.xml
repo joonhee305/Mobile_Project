@@ -71,6 +71,13 @@
                     android:layout_margin="10dp"
                     android:text="취소"/>
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -2,9 +2,12 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,29 +24,41 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.w3c.dom.Text;
 
-public class AddListActivity extends Activity {
+import java.util.ArrayList;
 
+public class AddListActivity extends Activity {
+    SetWidget setWidget;
     CheckBox chk_illjung, chk_pill;
-    LinearLayout container;
+    LinearLayout container, layoutTest;
     Button btn_save;
     TextView test;
     Boolean boolToDo = false, boolPill = false;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
     String getTime;
-
+    String breakfastTime,lunchTime,dinnerTime;
+    CheckBox[] medDate, medTime;
+    ArrayList<Medicine> medicines;
+    Intent mainActivity;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addlist);
-
-
+        myHelper=new myDBHelper(this);
+        medicines=new ArrayList<>();
 
         container = (LinearLayout) findViewById(R.id.container);
         chk_illjung = (CheckBox) findViewById(R.id.check_illjung);
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
         btn_save = (Button) findViewById(R.id.btn_save);
         test = (TextView) findViewById(R.id.tv_test);
+        layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
+
+        breakfastTime="09:00";
+        lunchTime="12:00";
+        dinnerTime="18:00";
+
+        mainActivity = new Intent(this, MainActivity.class);
 
         //illjung
         LinearLayout linear_write_todo = new LinearLayout(this);
@@ -130,10 +145,13 @@ public class AddListActivity extends Activity {
         bfd.setText("저녁 식전");
         CheckBox afd = new CheckBox(this);
         afd.setText("저녁 식후");
-        CheckBox bfs = new CheckBox(this);
-        bfs.setText("기상 후");
-        CheckBox afs = new CheckBox(this);
-        afs.setText("자기 전");
+
+
+        setWidget=new SetWidget();
+        medDate= new CheckBox[] {mon,tue,wed,thur,fri,sat,sun,eve};
+        medTime=new CheckBox[] {bfm,afm,bfl,afl,bfd,afd};
+        setWidget.setDate(medDate);
+
 
         linear_pillName.addView(tv_write_pill);
         linear_pillName.addView(edt_piilName);
@@ -153,14 +171,12 @@ public class AddListActivity extends Activity {
         linear_tableLay.addView(linear_tableRow2);
 
         linear_pillTime.addView(tv_eat_time);
-        linear_pillTime.addView(bfs);
         linear_pillTime.addView(bfm);
         linear_pillTime.addView(afm);
         linear_pillTime.addView(bfl);
         linear_pillTime.addView(afl);
         linear_pillTime.addView(bfd);
         linear_pillTime.addView(afd);
-        linear_pillTime.addView(afs);
 
 
 
@@ -190,6 +206,7 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
+                test.setText(boolToDo+" "+boolPill);
             }
 
         });
@@ -202,15 +219,15 @@ public class AddListActivity extends Activity {
                     container.addView(linear_pillName);
                     container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
-                    boolToDo = true;
-                    boolPill = false;
+                    boolToDo = false;
+                    boolPill = true;
                 }
                 else if(chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
                     container .setVisibility(View.VISIBLE);
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);
-                    boolToDo = false;
-                    boolPill = true;
+                    boolToDo = true;
+                    boolPill = false;
                 }
                 else{
                     container.setVisibility(View.INVISIBLE);
@@ -218,27 +235,162 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
+                test.setText(boolToDo+" "+boolPill);
             }
         });
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 sqLiteDatabase=myHelper.getWritableDatabase();
-                myHelper.onUpgrade(sqLiteDatabase,1,2);
+                Cursor cursor;
                 if(boolToDo){
-                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정',"+edt_write_todo.getText()+",getTime);");
-                    test.setText("");
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"');");
                 }
+                else if(boolPill){
+                    //출력값
+                    String value;
+                    //요일 값
+                    int dates=0;
+                    //시간 배열
+                    int times=0;
+                    //약 데이터
+                     Medicine m;
 
+                    //요일 처리
+                    for(int i=0;i<7;i++){
+                        if(medDate[i].isChecked()) dates+=(int)Math.pow(2,i);
+                    }
+                    //시간 처리
+                    for(int i=0;i<6;i++){
+                        if(medTime[i].isChecked()) times+=(int)Math.pow(2,i);
+                    }
+                    m=new Medicine(edt_piilName.getText().toString(), dates, times);
+                    medicines.add(m);
 
+                    for(Medicine medicine : medicines){
+                        int t=medicine.times;
+                        for(int i=0;i<7;i++){
+                            String mtime;
+                            if((t&1<<i)!=0){
+                                switch (i){
+                                    case 0:
+                                        mtime=addTime(breakfastTime,-30);
+                                        break;
+                                    case 1:
+                                        mtime=addTime(breakfastTime,30);
+                                        break;
+                                    case 2:
+                                        mtime=addTime(lunchTime,-30);
+                                        break;
+                                    case 3:
+                                        mtime=addTime(lunchTime,30);
+                                        break;
+                                    case 4:
+                                        mtime=addTime(dinnerTime,-30);
+                                        break;
+                                    case 5:
+                                        mtime=addTime(dinnerTime,30);
+                                        break;
+                                    default:
+                                        mtime="";
+                                        break;
+                                }
+                                sqLiteDatabase.execSQL("insert into toDayTBL values('복약','"+edt_piilName.getText()+"','"+mtime+"');");
+                            }
+                        }
+                    }
+                }
+                sqLiteDatabase.close();
+                startActivity(mainActivity);
+                finish();
             }
+
+
+
         });
 
         set_time_todo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hourOfDay, int minute) {
                 getTime = hourOfDay+":"+minute;
+                test.setText(getTime);
             }
         });
+
+    }
+    String addTime(String s,int t){
+        String result;
+        String[] res=s.split(":");
+        int val=Integer.parseInt(res[0])*60+Integer.parseInt(res[1]);
+        val+=t;
+        res[0]=(val/60)%24+"";
+        res[1]=(val%60)+"";
+
+        result=res[0]+":"+res[1];
+
+        return result;
+    }
+    public class SetWidget{
+        void matchCheckBox(CheckBox[] checkBoxes,int[] id){
+            int len=checkBoxes.length;
+            for(int i=0;i<len;i++){
+                checkBoxes[i]=findViewById(id[i]);
+            }
+        }
+        void matchCheckBox(CheckBox[] checkBoxes,int[] id,Dialog dialog){
+            int len=checkBoxes.length;
+            for(int i=0;i<len;i++){
+                checkBoxes[i]=dialog.findViewById(id[i]);
+            }
+        }
+        void setCheckBox(CheckBox[] checkBoxes){
+            int len=checkBoxes.length;
+            for(int i=0;i<len;i++){
+                checkBoxes[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CheckBox buttonView=(CheckBox) v;
+                        if(buttonView.isChecked()){
+                            boolean flag=true;
+                            for(int i=0;i<len-1;i++){
+                                if(!checkBoxes[i].isChecked()){ flag=false; break; }
+                            }
+                            if(flag) checkBoxes[len-1].setChecked(true);
+                            else checkBoxes[len-1].setChecked(false);
+                        }
+                        else checkBoxes[len-1].setChecked(false);
+                    }
+                });
+            }
+            checkBoxes[len-1].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(checkBoxes[len-1].isChecked()){
+                        for(CheckBox value : checkBoxes){ value.setChecked(true); }
+                    }
+                    else {
+                        for(CheckBox value : checkBoxes){ value.setChecked(false); }
+                    }
+                }
+            });
+        }
+        void setDate(CheckBox[] date) {
+            setCheckBox(date);
+        }
+        void setDate(CheckBox[] date, int[] id, Dialog dialog ){
+            matchCheckBox(date,id,dialog);
+            setCheckBox(date);
+        }
+    }
+    public class Medicine{
+        String name;
+        int dates;
+        int times;
+        public Medicine(String n, int d,int t){
+            name=n;
+            dates=d;
+            times=t;
+        }
     }
 }
