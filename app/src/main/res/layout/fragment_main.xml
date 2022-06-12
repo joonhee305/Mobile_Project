@@ -56,7 +56,6 @@
                 android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:text="추가"/>
-
         </LinearLayout>
     </ScrollView>
 
