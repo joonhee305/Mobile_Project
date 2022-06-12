@@ -227,7 +227,7 @@ public class AddListActivity extends Activity {
                 myHelper.onUpgrade(sqLiteDatabase,1,2);
                 if(boolToDo){
                     sqLiteDatabase.execSQL("insert into toDayTBL values('일정',"+edt_write_todo.getText()+",getTime);");
-                    test.setText(getTime);
+                    test.setText("");
                 }
 
 
