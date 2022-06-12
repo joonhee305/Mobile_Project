@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".QuizActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -18,8 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StartActivity" android:label="StartActivity"></activity>
-        <activity android:name=".AddListActivity" android:label="AddListActivity"></activity>
+        <activity
+            android:name=".StartActivity"
+            android:label="StartActivity" />
+        <activity
+            android:name=".AddListActivity"
+            android:label="AddListActivity" />
     </application>
 
 </manifest>
