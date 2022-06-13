@@ -22,6 +22,7 @@ public class myDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists routineTBL");
+        db.execSQL("drop table if exists toDayTBL");
         db.execSQL("drop table if exists historyTBL");
         onCreate(db);
     }
