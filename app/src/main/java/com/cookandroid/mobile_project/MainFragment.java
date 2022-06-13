@@ -33,6 +33,7 @@ public class MainFragment extends Fragment {
     String month,day,d,nowDate;
     LinearLayout layoutDoing, layoutExercise,layoutMedicine;
     public SharedPreferences prefs;
+    TextView testText;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
@@ -45,6 +46,7 @@ public class MainFragment extends Fragment {
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
         prefs= getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
+        testText=v.findViewById(R.id.testText);
         //임시
 
         String lastDate=prefs.getString("lastDate"," ");
@@ -62,8 +64,10 @@ public class MainFragment extends Fragment {
         day=sdfDay.format(date);
         d=sdfD.format(date);
         nowDate=month+day+d;
+        String x="lastDate = "+lastDate+", nowDate = "+nowDate;
+        testText.setText(x);
         if(!nowDate.equals(lastDate) || toDayCursor.getCount()==0){
-            lastDate=nowDate;
+            prefs.edit().putString("lastDate",nowDate).apply();
             toDayCursor.close();
             sqLiteDatabase.execSQL("delete from toDayTBL");
             Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
