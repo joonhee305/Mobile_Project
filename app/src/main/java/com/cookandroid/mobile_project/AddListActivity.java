@@ -35,8 +35,8 @@ public class AddListActivity extends Activity {
     Boolean boolToDo = false, boolPill = false;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
-    String getTime;
-    String breakfastTime,lunchTime,dinnerTime;
+    Integer getTime;
+    Integer breakfastTime,lunchTime,dinnerTime;
     CheckBox[] medDate, medTime;
     ArrayList<Medicine> medicines;
     Intent mainActivity;
@@ -54,9 +54,9 @@ public class AddListActivity extends Activity {
         test = (TextView) findViewById(R.id.tv_test);
         layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
 
-        breakfastTime="09:00";
-        lunchTime="12:00";
-        dinnerTime="18:00";
+        breakfastTime=540;
+        lunchTime=720;
+        dinnerTime=1080;
 
         mainActivity = new Intent(this, MainActivity.class);
 
@@ -241,9 +241,7 @@ public class AddListActivity extends Activity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 sqLiteDatabase=myHelper.getWritableDatabase();
-                Cursor cursor;
                 if(boolToDo){
                     sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"');");
                 }
@@ -271,30 +269,16 @@ public class AddListActivity extends Activity {
                     for(Medicine medicine : medicines){
                         int t=medicine.times;
                         for(int i=0;i<7;i++){
-                            String mtime;
+                            Integer mtime = 0;
                             if((t&1<<i)!=0){
                                 switch (i){
-                                    case 0:
-                                        mtime=addTime(breakfastTime,-30);
-                                        break;
-                                    case 1:
-                                        mtime=addTime(breakfastTime,30);
-                                        break;
-                                    case 2:
-                                        mtime=addTime(lunchTime,-30);
-                                        break;
-                                    case 3:
-                                        mtime=addTime(lunchTime,30);
-                                        break;
-                                    case 4:
-                                        mtime=addTime(dinnerTime,-30);
-                                        break;
-                                    case 5:
-                                        mtime=addTime(dinnerTime,30);
-                                        break;
-                                    default:
-                                        mtime="";
-                                        break;
+                                    case 0: mtime=breakfastTime-30; break;
+                                    case 1: mtime=breakfastTime+30; break;
+                                    case 2: mtime=lunchTime-30; break;
+                                    case 3: mtime=lunchTime+30; break;
+                                    case 4: mtime=dinnerTime-30; break;
+                                    case 5: mtime=dinnerTime+30; break;
+                                    default: mtime=0; break;
                                 }
                                 sqLiteDatabase.execSQL("insert into toDayTBL values('복약','"+edt_piilName.getText()+"','"+mtime+"');");
                             }
@@ -313,24 +297,12 @@ public class AddListActivity extends Activity {
         set_time_todo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hourOfDay, int minute) {
-                getTime = hourOfDay+":"+minute;
-                test.setText(getTime);
+                getTime = hourOfDay*60+minute;
             }
         });
 
     }
-    String addTime(String s,int t){
-        String result;
-        String[] res=s.split(":");
-        int val=Integer.parseInt(res[0])*60+Integer.parseInt(res[1]);
-        val+=t;
-        res[0]=(val/60)%24+"";
-        res[1]=(val%60)+"";
 
-        result=res[0]+":"+res[1];
-
-        return result;
-    }
     public class SetWidget{
         void matchCheckBox(CheckBox[] checkBoxes,int[] id){
             int len=checkBoxes.length;

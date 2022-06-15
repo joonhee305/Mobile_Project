@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     MainFragment mainFragment;
     Button reset;
     TextView titleDate;
+
     // 여기까지
     public SharedPreferences prefs;
     @Override
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                prefs.edit().putString("lastDate"," ").apply();
                 prefs.edit().putBoolean("isFirstRun",true).apply();
             }
         });

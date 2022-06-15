@@ -1,5 +1,6 @@
 package com.cookandroid.mobile_project;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +34,13 @@ public class MainFragment extends Fragment {
     HashMap<String,Integer> mapDate;
     String month,day,d,nowDate;
     LinearLayout layoutDoing, layoutExercise,layoutMedicine;
+    TextView testText;
     public SharedPreferences prefs;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
         Button btn_addList = (Button) v.findViewById(R.id.btnAddList);
+        testText=v.findViewById(R.id.testText);
         layoutDoing=v.findViewById(R.id.layoutDoing);
         layoutExercise=v.findViewById(R.id.layoutExercise);
         layoutMedicine=v.findViewById(R.id.layoutMedicine);
@@ -45,7 +49,10 @@ public class MainFragment extends Fragment {
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
         prefs= getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
-        //임시
+
+//        Intent intent = getActivity().getIntent();
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
 
         String lastDate=prefs.getString("lastDate"," ");
 
@@ -62,75 +69,107 @@ public class MainFragment extends Fragment {
         day=sdfDay.format(date);
         d=sdfD.format(date);
         nowDate=month+day+d;
+
+        String asdf="lastDate : "+lastDate+"nowDate : "+nowDate;
+
         if(!nowDate.equals(lastDate) || toDayCursor.getCount()==0){
-            lastDate=nowDate;
+            prefs.edit().putString("lastDate",nowDate).apply();
             toDayCursor.close();
             sqLiteDatabase.execSQL("delete from toDayTBL");
             Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
+
+            asdf+="\n루틴count : "+routineCursor.getCount();
             while(routineCursor.moveToNext()){
-                String tType,tName,tTime;
+                String tType,tName;
+                int tTime;
                 tType=routineCursor.getString(0);
                 tName=routineCursor.getString(1);
                 int rDate=routineCursor.getInt(2);
-                tTime=routineCursor.getString(3);
+                tTime=routineCursor.getInt(3);
                 if((rDate & mapDate.get(d))!=0){
-                    sqLiteDatabase.execSQL("insert into toDayTBL values('"+tType+"','"+tName+"','"+tTime+"');");
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('"+tType+"','"+tName+"',"+tTime+");");
                 }
             }
             routineCursor.close();
         }
         //데이터 삽입
-        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='식사' or tType=='일정'",null);
+        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",null);
         while(toDayCursor.moveToNext()){
             Button btn=new Button(getActivity());
             String tName=toDayCursor.getString(1);
-            String tTime=toDayCursor.getString(2);
-            String value=tName+" "+tTime;
+            int tTime=toDayCursor.getInt(2);
+
+            String value=tName+" "+timeToString(tTime);
             btn.setText(value);
+            btn.setOnClickListener(new View.OnClickListener() {
+                Integer i=btn.getId();
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),i.toString(),Toast.LENGTH_SHORT).show();
+                }
+            });
             layoutDoing.addView(btn);
         }
 
 
-        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='운동'",null);
+        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='운동' order by tTime",null);
         while(toDayCursor.moveToNext()){
             Button btn=new Button(getActivity());
             String tName=toDayCursor.getString(1);
-            String tTime=toDayCursor.getString(2);
-            String value=tName+" "+tTime;
+            int tTime=toDayCursor.getInt(2);
+
+            String value=tName+" "+timeToString(tTime);
             btn.setText(value);
             layoutExercise.addView(btn);
         }
 
 
-        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='복약'",null);
+        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='복약' order by tTime",null);
         while(toDayCursor.moveToNext()){
             Button btn=new Button(getActivity());
             String tName=toDayCursor.getString(1);
-            String tTime=toDayCursor.getString(2);
-            String value=tName+" "+tTime;
+            int tTime=toDayCursor.getInt(2);
+
+            String value=tName+" "+timeToString(tTime);
             btn.setText(value);
             layoutMedicine.addView(btn);
         }
-
+        toDayCursor.close();
 
         btn_addList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), AddListActivity.class);
-//                startActivity(intent);
-                Toast.makeText(getActivity(),"이건가?",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), AddListActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+
+//                Toast.makeText(getActivity(),"이건가?",Toast.LENGTH_SHORT).show();
             }
         });
 
         return v;
     }
-    void setMapDate(HashMap<String,Integer> mapDate){
-        mapDate.put("월",0);mapDate.put("Mon",0);
-        mapDate.put("화",1);mapDate.put("Tue",1);
-        mapDate.put("수",2);mapDate.put("Wed",2);
-        mapDate.put("목",3);mapDate.put("Thu",3);
-        mapDate.put("금",4);mapDate.put("Fri",4);
-        mapDate.put("토",5);mapDate.put("Sat",5);
-        mapDate.put("일",6);mapDate.put("Sun",6);
+    public void setMapDate(HashMap<String,Integer> mapDate){
+        mapDate.put("월",1);mapDate.put("Mon",1);
+        mapDate.put("화",2);mapDate.put("Tue",2);
+        mapDate.put("수",4);mapDate.put("Wed",4);
+        mapDate.put("목",8);mapDate.put("Thu",8);
+        mapDate.put("금",16);mapDate.put("Fri",16);
+        mapDate.put("토",32);mapDate.put("Sat",32);
+        mapDate.put("일",64);mapDate.put("Sun",64);
+    }
+
+    //정수를 시간으로 고쳐줌
+    public String timeToString(int t){
+        String res="";
+        //한자리면 앞에 0을 추가
+        if((t/60)%24<10) res+="0";
+        res+=(t/60)%24+":";
+        t%=60;
+        //한자리면 앞에 0을 추가
+        if(t<10) res+="0";
+        res+=t+"";
+
+        return res;
     }
 }
