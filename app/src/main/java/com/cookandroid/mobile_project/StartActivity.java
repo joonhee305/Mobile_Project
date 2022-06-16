@@ -278,7 +278,6 @@ public class StartActivity extends Activity {
                 sqLiteDatabase=myHelper.getWritableDatabase();
                 myHelper.onUpgrade(sqLiteDatabase,1,2);
                 sqLiteDatabase.close();
-
             }
         });
     }

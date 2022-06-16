@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -39,7 +40,8 @@ public class AddListActivity extends Activity {
     Integer breakfastTime,lunchTime,dinnerTime;
     CheckBox[] medDate, medTime;
     ArrayList<Medicine> medicines;
-    Intent mainActivity;
+    Intent mainActivity,mainFragment;
+    int idx;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,10 @@ public class AddListActivity extends Activity {
         dinnerTime=1080;
 
         mainActivity = new Intent(this, MainActivity.class);
+        mainFragment=getIntent();
+        idx=mainFragment.getIntExtra("idx",0);
 
+        Toast.makeText(getApplicationContext(),idx+"",Toast.LENGTH_SHORT).show();
         //illjung
         LinearLayout linear_write_todo = new LinearLayout(this);
         linear_write_todo.setOrientation(LinearLayout.VERTICAL);
@@ -243,7 +248,7 @@ public class AddListActivity extends Activity {
             public void onClick(View view) {
                 sqLiteDatabase=myHelper.getWritableDatabase();
                 if(boolToDo){
-                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"');");
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"',0,"+idx+");");
                 }
                 else if(boolPill){
                     //출력값
@@ -265,7 +270,6 @@ public class AddListActivity extends Activity {
                     }
                     m=new Medicine(edt_piilName.getText().toString(), dates, times);
                     medicines.add(m);
-
                     for(Medicine medicine : medicines){
                         int t=medicine.times;
                         for(int i=0;i<7;i++){
@@ -280,7 +284,7 @@ public class AddListActivity extends Activity {
                                     case 5: mtime=dinnerTime+30; break;
                                     default: mtime=0; break;
                                 }
-                                sqLiteDatabase.execSQL("insert into toDayTBL values('복약','"+edt_piilName.getText()+"','"+mtime+"');");
+                                sqLiteDatabase.execSQL("insert into toDayTBL values('복약','"+edt_piilName.getText()+"','"+mtime+"',0,"+idx+");"); idx++;
                             }
                         }
                     }

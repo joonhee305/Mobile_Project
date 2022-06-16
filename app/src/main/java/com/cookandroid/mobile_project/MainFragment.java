@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -35,6 +37,7 @@ public class MainFragment extends Fragment {
     String month,day,d,nowDate;
     LinearLayout layoutDoing, layoutExercise,layoutMedicine;
     TextView testText;
+    int idx=300;
     public SharedPreferences prefs;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class MainFragment extends Fragment {
         SimpleDateFormat sdfD=new SimpleDateFormat("EE");
 
         Cursor toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL",null);
+        idx+=toDayCursor.getCount();
         month=sdfMonth.format(date);
         day=sdfDay.format(date);
         d=sdfD.format(date);
@@ -78,7 +82,7 @@ public class MainFragment extends Fragment {
             sqLiteDatabase.execSQL("delete from toDayTBL");
             Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
 
-            asdf+="\n루틴count : "+routineCursor.getCount();
+
             while(routineCursor.moveToNext()){
                 String tType,tName;
                 int tTime;
@@ -86,60 +90,25 @@ public class MainFragment extends Fragment {
                 tName=routineCursor.getString(1);
                 int rDate=routineCursor.getInt(2);
                 tTime=routineCursor.getInt(3);
+
                 if((rDate & mapDate.get(d))!=0){
-                    sqLiteDatabase.execSQL("insert into toDayTBL values('"+tType+"','"+tName+"',"+tTime+");");
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('"+tType+"','"+tName+"',"+tTime+",0,"+idx+");"); idx++;
                 }
             }
             routineCursor.close();
         }
         //데이터 삽입
-        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",null);
-        while(toDayCursor.moveToNext()){
-            Button btn=new Button(getActivity());
-            String tName=toDayCursor.getString(1);
-            int tTime=toDayCursor.getInt(2);
 
-            String value=tName+" "+timeToString(tTime);
-            btn.setText(value);
-            btn.setOnClickListener(new View.OnClickListener() {
-                Integer i=btn.getId();
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getActivity(),i.toString(),Toast.LENGTH_SHORT).show();
-                }
-            });
-            layoutDoing.addView(btn);
-        }
-
-
-        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='운동' order by tTime",null);
-        while(toDayCursor.moveToNext()){
-            Button btn=new Button(getActivity());
-            String tName=toDayCursor.getString(1);
-            int tTime=toDayCursor.getInt(2);
-
-            String value=tName+" "+timeToString(tTime);
-            btn.setText(value);
-            layoutExercise.addView(btn);
-        }
-
-
-        toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='복약' order by tTime",null);
-        while(toDayCursor.moveToNext()){
-            Button btn=new Button(getActivity());
-            String tName=toDayCursor.getString(1);
-            int tTime=toDayCursor.getInt(2);
-
-            String value=tName+" "+timeToString(tTime);
-            btn.setText(value);
-            layoutMedicine.addView(btn);
-        }
-        toDayCursor.close();
+        setToDay("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",sqLiteDatabase,layoutDoing);
+        setToDay("select * from toDayTBL where tType=='운동' order by tTime",sqLiteDatabase,layoutExercise);
+        setToDay("select * from toDayTBL where tType=='복약' order by tTime",sqLiteDatabase,layoutMedicine);
 
         btn_addList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddListActivity.class);
+                intent.putExtra("idx",idx);
+                Toast.makeText(getActivity(),idx+"",Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 getActivity().finish();
 
@@ -171,5 +140,47 @@ public class MainFragment extends Fragment {
         res+=t+"";
 
         return res;
+    }
+
+    public void setToDay(String query,SQLiteDatabase sqLiteDatabase,LinearLayout layout){
+        Cursor toDayCursor=sqLiteDatabase.rawQuery(query,null);
+        while(toDayCursor.moveToNext()){
+            Button btn=new Button(getActivity());
+            String tName=toDayCursor.getString(1);
+            int tTime=toDayCursor.getInt(2);
+            int tCheck=toDayCursor.getInt(3);
+            int tId=toDayCursor.getInt(4);
+            String value=tName+" "+timeToString(tTime);
+            btn.setText(value);
+            btn.setId(tId);
+            if(tCheck==0){
+                btn.setOnClickListener(new View.OnClickListener() {
+                    Integer btnId=btn.getId();
+                    @Override
+                    public void onClick(View v) {
+                        sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tId = "+btnId+"");
+                        Toast.makeText(getActivity(),"인증완료!",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else{
+                btn.setHeight(10);
+                btn.setBackgroundColor(Color.parseColor("#00ff00"));
+                btn.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(),"우효",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            layout.addView(btn);
+            LinearLayout.LayoutParams mLayoutParams=(LinearLayout.LayoutParams) btn.getLayoutParams();
+            mLayoutParams.bottomMargin=10;
+            mLayoutParams.leftMargin=5;
+            mLayoutParams.rightMargin=5;
+            btn.setLayoutParams(mLayoutParams);
+        }
+        toDayCursor.close();
     }
 }
