@@ -41,7 +41,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera);
 
         checkPermission(); //권한체크
 
@@ -49,7 +49,7 @@ public class CameraActivity extends AppCompatActivity {
         btnCamera = findViewById(R.id.btnCapture); //Button 선언
         btnSave = findViewById(R.id.btnSave); //Button 선언
 
-        loadImgArr();
+        // loadImgArr();
 
         //촬영
         btnCamera.setOnClickListener(v -> captrueCamera());
