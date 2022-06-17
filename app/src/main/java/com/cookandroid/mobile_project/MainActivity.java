@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     Button reset;
     TextView titleDate;
-
+    SQLiteDatabase sqLiteDatabase;
+    SQLiteOpenHelper myHelper;
     // 여기까지
     public SharedPreferences prefs;
     @Override
@@ -36,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // 송지민이 추가한 프레그먼트 관련 코드
+
+//        myHelper=new myDBHelper(this);
+//        sqLiteDatabase=myHelper.getWritableDatabase();
+//        myHelper.onUpgrade(sqLiteDatabase,1,2);
+//        sqLiteDatabase.close();
 
         //재시작 확인
         prefs=getSharedPreferences("Pref",MODE_PRIVATE);
