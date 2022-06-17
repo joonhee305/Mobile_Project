@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
@@ -51,6 +53,7 @@ public class StartActivity extends Activity {
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
     Intent mainActivity;
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +75,11 @@ public class StartActivity extends Activity {
         chkLunch=findViewById(R.id.chkLunch);
         chkDinner=findViewById(R.id.chkDinner);
         breakTimePicker=findViewById(R.id.breakTimePicker);
+        breakTimePicker.setHour(9); breakTimePicker.setMinute(0);
         lunchTimePicker=findViewById(R.id.lunchTimePicker);
+        lunchTimePicker.setHour(12); lunchTimePicker.setMinute(0);
         dinnerTimePicker=findViewById(R.id.dinnerTimePicker);
+        dinnerTimePicker.setHour(18); dinnerTimePicker.setMinute(0);
 
         breakTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override

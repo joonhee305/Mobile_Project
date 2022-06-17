@@ -31,7 +31,7 @@ public class AddListActivity extends Activity {
     SetWidget setWidget;
     CheckBox chk_illjung, chk_pill;
     LinearLayout container, layoutTest;
-    Button btn_save;
+    Button btn_save,btn_cancel;
     TextView test;
     Boolean boolToDo = false, boolPill = false;
     SQLiteDatabase sqLiteDatabase;
@@ -53,6 +53,7 @@ public class AddListActivity extends Activity {
         chk_illjung = (CheckBox) findViewById(R.id.check_illjung);
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
         btn_save = (Button) findViewById(R.id.btn_save);
+        btn_cancel=(Button) findViewById(R.id.btn_cancel);
         test = (TextView) findViewById(R.id.tv_test);
         layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
 
@@ -190,8 +191,10 @@ public class AddListActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if(chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
+                if(chk_illjung.isChecked()==true){
+                    chk_pill.setChecked(false);
                     container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);
                     boolToDo = true;
@@ -199,6 +202,7 @@ public class AddListActivity extends Activity {
                 }
                 else if(chk_illjung.isChecked()==false && chk_pill.isChecked() == true){
                     container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_pillName);
                     container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
@@ -219,8 +223,10 @@ public class AddListActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if(chk_illjung.isChecked()==false && chk_pill.isChecked() == true){
+                if(chk_pill.isChecked() == true){
+                    chk_illjung.setChecked(false);
                     container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_pillName);
                     container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
@@ -229,6 +235,7 @@ public class AddListActivity extends Activity {
                 }
                 else if(chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
                     container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);
                     boolToDo = true;
@@ -296,6 +303,12 @@ public class AddListActivity extends Activity {
 
 
 
+        });
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
 
         set_time_todo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
