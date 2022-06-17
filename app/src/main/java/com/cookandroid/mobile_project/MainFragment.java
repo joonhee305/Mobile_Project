@@ -34,7 +34,7 @@ public class MainFragment extends Fragment {
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
     HashMap<String,Integer> mapDate;
-    String month,day,d,nowDate;
+    String month,day,d,nowDate,year;
     LinearLayout layoutDoing, layoutExercise,layoutMedicine;
     TextView testText;
     int idx=300;
@@ -66,15 +66,17 @@ public class MainFragment extends Fragment {
         SimpleDateFormat sdfMonth=new SimpleDateFormat("MM");
         SimpleDateFormat sdfDay=new SimpleDateFormat("dd");
         SimpleDateFormat sdfD=new SimpleDateFormat("EE");
+        SimpleDateFormat sdfYear=new SimpleDateFormat("yyyy");
 
         Cursor toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL",null);
         idx+=toDayCursor.getCount();
         month=sdfMonth.format(date);
         day=sdfDay.format(date);
         d=sdfD.format(date);
+        year=sdfYear.format(date);
         nowDate=month+day+d;
 
-        String asdf="lastDate : "+lastDate+"nowDate : "+nowDate;
+        //String asdf="lastDate : "+lastDate+"nowDate : "+nowDate;
 
         if(!nowDate.equals(lastDate) || toDayCursor.getCount()==0){
             prefs.edit().putString("lastDate",nowDate).apply();
@@ -146,6 +148,7 @@ public class MainFragment extends Fragment {
         Cursor toDayCursor=sqLiteDatabase.rawQuery(query,null);
         while(toDayCursor.moveToNext()){
             Button btn=new Button(getActivity());
+            String tType=toDayCursor.getString(0);
             String tName=toDayCursor.getString(1);
             int tTime=toDayCursor.getInt(2);
             int tCheck=toDayCursor.getInt(3);
@@ -153,13 +156,17 @@ public class MainFragment extends Fragment {
             String value=tName+" "+timeToString(tTime);
             btn.setText(value);
             btn.setId(tId);
+            String path=year+month+day+btn.getId();
             if(tCheck==0){
                 btn.setOnClickListener(new View.OnClickListener() {
                     Integer btnId=btn.getId();
                     @Override
                     public void onClick(View v) {
                         sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tId = "+btnId+"");
-                        Toast.makeText(getActivity(),"인증완료!",Toast.LENGTH_SHORT).show();
+                       // sqLiteDatabase.execSQL("insert into historyTBL values('"+tType+"','"+tName+"',"+tTime+",0,"+idx+");");
+                        Intent intent = new Intent(getActivity(), CameraActivity.class);
+                        intent.putExtra("Path",path);
+                        startActivity(intent);
                     }
                 });
             }
