@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Camera;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -26,7 +27,6 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-
 
 public class MainFragment extends Fragment {
     SQLiteDatabase sqLiteDatabase;
@@ -92,20 +92,21 @@ public class MainFragment extends Fragment {
             }
             routineCursor.close();
         }
-        //데이터 삽입
+        // 데이터 삽입
         toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",null);
-        while(toDayCursor.moveToNext()){
+        while (toDayCursor.moveToNext()) {
             Button btn=new Button(getActivity());
             String tName=toDayCursor.getString(1);
             int tTime=toDayCursor.getInt(2);
 
-            String value=tName+" "+timeToString(tTime);
+            String value= tName+" "+timeToString(tTime);
             btn.setText(value);
             btn.setOnClickListener(new View.OnClickListener() {
-                Integer i=btn.getId();
+                Integer i = btn.getId();
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(),i.toString(),Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), CameraActivity.class);
+                    startActivity(intent);
                 }
             });
             layoutDoing.addView(btn);
