@@ -71,7 +71,7 @@ public class CameraActivity extends AppCompatActivity {
                     Toast.makeText(this, "저장할 사진이 없습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     //저장
-                    saveImg();
+                    saveImg(picturePath);
                     mCurrentPhotoPath = ""; //initialize
                 }
 
@@ -86,12 +86,10 @@ public class CameraActivity extends AppCompatActivity {
             File photoFile=null;
             try{
                 File tempDir=getCacheDir();
-
                 File tempImage=File.createTempFile(picturePath,".jpg",tempDir);
-
                 mCurrentPhotoPath=tempImage.getAbsolutePath();
-
                 photoFile=tempImage;
+                Toast.makeText(getApplicationContext(),photoFile.getPath(),Toast.LENGTH_SHORT).show();
             }catch (IOException e) {
                 Log.w(TAG,"파일 생성 에러!",e);
             }
@@ -106,12 +104,12 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
-    private void saveImg(){
+    private void saveImg(String path){
         try{
             File storageDir=new File(getFilesDir()+"/capture");
             if(!storageDir.exists()) storageDir.mkdirs();
 
-            String filename="캡쳐파일"+".jpg";
+            String filename=path+".jpg";
 
             File file=new File(storageDir,filename);
             boolean deleted=file.delete();
@@ -164,7 +162,6 @@ public class CameraActivity extends AppCompatActivity {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO: {
                     if (resultCode == RESULT_OK) {
-
                         File file = new File(mCurrentPhotoPath);
                         Bitmap bitmap = MediaStore.Images.Media
                                 .getBitmap(getContentResolver(), Uri.fromFile(file));
