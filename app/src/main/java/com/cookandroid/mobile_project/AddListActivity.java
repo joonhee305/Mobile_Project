@@ -30,7 +30,7 @@ public class AddListActivity extends Activity {
     SetWidget setWidget;
     CheckBox chk_illjung, chk_pill;
     LinearLayout container, layoutTest;
-    Button btn_save;
+    Button btn_save, btn_close;
     TextView test;
     Boolean boolToDo = false, boolPill = false;
     SQLiteDatabase sqLiteDatabase;
@@ -51,6 +51,7 @@ public class AddListActivity extends Activity {
         chk_illjung = (CheckBox) findViewById(R.id.check_illjung);
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
         btn_save = (Button) findViewById(R.id.btn_save);
+        btn_close = (Button) findViewById(R.id.btn_cancle);
         test = (TextView) findViewById(R.id.tv_test);
         layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
 
@@ -266,6 +267,20 @@ public class AddListActivity extends Activity {
                     m=new Medicine(edt_piilName.getText().toString(), dates, times);
                     medicines.add(m);
 
+                    Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
+
+                    //루틴에서 아침,점심,저녁 시간 가져오기
+                    while (routineCursor.moveToNext()){
+                        if(routineCursor.getString(0).equals("식사") && routineCursor.getString(1).equals("아침")){
+                            breakfastTime = routineCursor.getInt(3);
+                        }
+                        else if(routineCursor.getString(0).equals("식사") && routineCursor.getString(1).equals("점심")){
+                            lunchTime = routineCursor.getInt(3);
+                        }
+                        else if(routineCursor.getString(0).equals("식사") && routineCursor.getString(1).equals("저녁")){
+                            dinnerTime = routineCursor.getInt(3);
+                        }}
+
                     for(Medicine medicine : medicines){
                         int t=medicine.times;
                         for(int i=0;i<7;i++){
@@ -293,6 +308,14 @@ public class AddListActivity extends Activity {
 
 
         });
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(mainActivity);
+                finish();
+            }
+        });
+
 
         set_time_todo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override

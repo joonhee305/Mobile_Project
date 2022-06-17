@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     // 송지민이 추가한 메인 화면의 툴바와 프레그먼트
     Toolbar toolbar;
     MainFragment mainFragment;
+    HistoryFragment historyFragment;
+
     Button reset;
     TextView titleDate;
 
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         //플래그먼트
         mainFragment = new MainFragment();
-
+        historyFragment = new HistoryFragment();
 
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 if(position == 0){
                     selected = mainFragment;
                 } else if(position == 1){
-                    selected = mainFragment;
+                    selected = historyFragment;
                 }else if(position == 2){
                     selected = mainFragment;
                 }
