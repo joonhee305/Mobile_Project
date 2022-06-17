@@ -124,7 +124,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openDB(){
-        SQLiteDatabase rootinDatabase;
-    }
 }
