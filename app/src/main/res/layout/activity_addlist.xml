@@ -44,142 +44,17 @@
                 android:id="@+id/container"
                 android:orientation="vertical"
                 android:visibility="invisible">
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:layout_margin="10dp">-->
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="복용하실 약을 적어주세요"-->
-<!--                        android:textSize="25dp"/>-->
-
-<!--                    <EditText-->
-<!--                        android:id="@+id/edt_Medname"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:hint="복용중인 약을 적어주세요"-->
-<!--                        android:minHeight="48dp"-->
-<!--                        android:textSize="15dp" />-->
-<!--                </LinearLayout>-->
-
-<!--                <TableLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="10dp"-->
-<!--                    >-->
-<!--                    <TableRow>-->
-<!--                        <TextView-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_span="4"-->
-<!--                            android:text="복용 요일을 선택해주세요"-->
-<!--                            android:textSize="25dp"/>-->
-<!--                    </TableRow>-->
-<!--                    <TableRow>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Mon"-->
-<!--                            android:text="월"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Tue"-->
-<!--                            android:text="화"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Wed"-->
-<!--                            android:text="수"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Thu"-->
-<!--                            android:text="목"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                    </TableRow>-->
-<!--                    <TableRow>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Fri"-->
-<!--                            android:text="금"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Sat"-->
-<!--                            android:text="토"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Sun"-->
-<!--                            android:text="일"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                        <CheckBox-->
-<!--                            android:id="@+id/btn_Every"-->
-<!--                            android:text="매일"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:layout_margin="5dp"/>-->
-<!--                    </TableRow>-->
-<!--                </TableLayout>-->
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:layout_margin="10dp">-->
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="복용 시간을 선택해주세요"-->
-<!--                        android:textSize="25dp"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/wake_up"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="기상 후"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/break_bf"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="아침 식전"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/break_af"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="아침 식후"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/lunch_bf"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="점심 식전"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/lunch_af"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="점심 식후"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/dinner_bf"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="저녁 식전"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/dinner_af"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="저녁 식후"/>-->
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/sleep_bf"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="자기전"/>-->
-<!--                </LinearLayout>-->
-
-<!--            </LinearLayout>-->
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="10dp">
+                <TextView
+                    android:id="@+id/tv_test"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="test"/>
                 <Button
                     android:id="@+id/btn_save"
                     android:layout_width="wrap_content"
@@ -189,13 +64,20 @@
                     android:text="저장"/>
 
                 <Button
-                    android:id="@+id/btn_cancle"
+                    android:id="@+id/btn_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:text="취소"/>
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

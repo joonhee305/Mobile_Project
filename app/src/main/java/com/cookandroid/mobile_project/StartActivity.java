@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
@@ -47,10 +49,11 @@ public class StartActivity extends Activity {
     LinearLayout layoutMed;
     TimePicker breakTimePicker, lunchTimePicker,dinnerTimePicker,exerTimePicker;
     ArrayList<Medicine> medicines;
-    String breakfastTime,lunchTime,dinnerTime,exerciseTime;
+    Integer breakfastTime,lunchTime,dinnerTime,exerciseTime;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
     Intent mainActivity;
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,23 +66,26 @@ public class StartActivity extends Activity {
 
         //식사 레이아웃
         //아침 점심 저녁, defalut
-        breakfastTime="09:00";
-        lunchTime="12:00";
-        dinnerTime="18:00";
+        breakfastTime=540;
+        lunchTime=720;
+        dinnerTime=1080;
 
 
         chkBreakfast=findViewById(R.id.chkBreakfast);
         chkLunch=findViewById(R.id.chkLunch);
         chkDinner=findViewById(R.id.chkDinner);
         breakTimePicker=findViewById(R.id.breakTimePicker);
+        breakTimePicker.setHour(9); breakTimePicker.setMinute(0);
         lunchTimePicker=findViewById(R.id.lunchTimePicker);
+        lunchTimePicker.setHour(12); lunchTimePicker.setMinute(0);
         dinnerTimePicker=findViewById(R.id.dinnerTimePicker);
+        dinnerTimePicker.setHour(18); dinnerTimePicker.setMinute(0);
 
         breakTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                 if(chkBreakfast.isChecked()){
-                    breakfastTime=hourOfDay+":"+minute;
+                    breakfastTime=hourOfDay*60+minute;
                 }
             }
         });
@@ -87,7 +93,7 @@ public class StartActivity extends Activity {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                 if(chkLunch.isChecked()){
-                    lunchTime = hourOfDay+":"+minute;
+                    lunchTime = hourOfDay*60+minute;
                 }
             }
         });
@@ -95,7 +101,7 @@ public class StartActivity extends Activity {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                 if(chkDinner.isChecked()){
-                    dinnerTime=hourOfDay+":"+minute;
+                    dinnerTime=hourOfDay*60+minute;
                 }
             }
         });
@@ -112,7 +118,7 @@ public class StartActivity extends Activity {
         exerDate=new CheckBox[8];
         exerTimePicker=findViewById(R.id.exerTimePicker);
         setWidget.setDate(exerDate,exerId);
-        exerciseTime="16:00";
+        exerciseTime=960;
         exerTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -123,7 +129,7 @@ public class StartActivity extends Activity {
                     }
                 }
                 if(flag){
-                    exerciseTime=hourOfDay+":"+minute;
+                    exerciseTime=hourOfDay*60+minute;
                 }
             }
         });
@@ -151,32 +157,18 @@ public class StartActivity extends Activity {
                 for(Medicine medicine : medicines){
                     int t=medicine.times;
                     for(int i=0;i<7;i++){
-                        String mtime;
+                        Integer mtime = 0;
                         if((t&1<<i)!=0){
                             switch (i){
-                                case 0:
-                                    mtime=addTime(breakfastTime,-30);
-                                    break;
-                                case 1:
-                                    mtime=addTime(breakfastTime,30);
-                                    break;
-                                case 2:
-                                    mtime=addTime(lunchTime,-30);
-                                    break;
-                                case 3:
-                                    mtime=addTime(lunchTime,30);
-                                    break;
-                                case 4:
-                                    mtime=addTime(dinnerTime,-30);
-                                    break;
-                                case 5:
-                                    mtime=addTime(dinnerTime,30);
-                                    break;
-                                default:
-                                    mtime="";
-                                    break;
+                                case 0: mtime=breakfastTime-30; break;
+                                case 1: mtime=breakfastTime+30; break;
+                                case 2: mtime=lunchTime-30; break;
+                                case 3: mtime=lunchTime+30; break;
+                                case 4: mtime=dinnerTime-30; break;
+                                case 5: mtime=dinnerTime+30; break;
+                                default: mtime=0; break;
                             }
-                            sqLiteDatabase.execSQL("insert into routineTBL values('복약','"+medicine.name+"',"+medicine.dates+",'"+mtime+"');");
+                            sqLiteDatabase.execSQL("insert into routineTBL values('복약','"+medicine.name+"',"+medicine.dates+","+mtime+");");
                         }
                     }
                     //sqLiteDatabase.execSQL("insert into routineTBL values('식사','"+medicine.name+"',"+medecine.times+",'"+breakfastTime+"'')");
@@ -185,7 +177,7 @@ public class StartActivity extends Activity {
                 int exerDates=0;
                 for(int i=0;i<7;i++) if(exerDate[i].isChecked()) exerDates+=(int)Math.pow(2,i);
                 if(exerDates!=0){
-                    sqLiteDatabase.execSQL("insert into routineTBL values('운동','운동',"+exerDates+",'"+exerciseTime+"');");
+                    sqLiteDatabase.execSQL("insert into routineTBL values('운동','운동',"+exerDates+","+exerciseTime+");");
                 }
                 sqLiteDatabase.close();
                 startActivity(mainActivity);
@@ -228,10 +220,8 @@ public class StartActivity extends Activity {
                         else {
                             //출력값
                             String value;
-                            //요일 값
-                            int dates=0;
-                            //시간 배열
-                            int times=0;
+                            //요일 값 //시간 배열
+                            int dates=0, times=0;
                             //약 데이터
                             Medicine m;
 
@@ -239,16 +229,18 @@ public class StartActivity extends Activity {
                             for(int i=0;i<7;i++){
                                 if(medDate[i].isChecked()) dates+=(int)Math.pow(2,i);
                             }
+
                             //시간 처리
                             for(int i=0;i<6;i++){
-                                if(medTime[i].isChecked()) times+=(int)Math.pow(2,i);
+                                if(medTime[i].isChecked()) {
+                                    times+=(int)Math.pow(2,i);
+                                }
                             }
                             m=new Medicine(name, dates, times);
                             medicines.add(m);
                             layoutMed.addView(btnMed);
+                            value=name+"\n"+dates;
 
-                            value=name+"\n"+dates+"\n"+times;
-                            value+="\n"+addTime(breakfastTime,30)+"\n"+addTime(lunchTime,30)+"\n"+addTime(dinnerTime,30);
                             btnMed.setText(value);
                             addMed.dismiss();
                         }
@@ -292,36 +284,24 @@ public class StartActivity extends Activity {
                 sqLiteDatabase=myHelper.getWritableDatabase();
                 myHelper.onUpgrade(sqLiteDatabase,1,2);
                 sqLiteDatabase.close();
-
             }
         });
     }
-    String addTime(String s,int t){
-        String result;
-        String[] res=s.split(":");
-        int val=Integer.parseInt(res[0])*60+Integer.parseInt(res[1]);
-        val+=t;
-        res[0]=(val/60)%24+"";
-        res[1]=(val%60)+"";
 
-        result=res[0]+":"+res[1];
-
-        return result;
-    }
     public class SetWidget{
-        void matchCheckBox(CheckBox[] checkBoxes,int[] id){
+        public void matchCheckBox(CheckBox[] checkBoxes,int[] id){
             int len=checkBoxes.length;
             for(int i=0;i<len;i++){
                 checkBoxes[i]=findViewById(id[i]);
             }
         }
-        void matchCheckBox(CheckBox[] checkBoxes,int[] id,Dialog dialog){
+        public void matchCheckBox(CheckBox[] checkBoxes,int[] id,Dialog dialog){
             int len=checkBoxes.length;
             for(int i=0;i<len;i++){
                 checkBoxes[i]=dialog.findViewById(id[i]);
             }
         }
-        void setCheckBox(CheckBox[] checkBoxes){
+        public void setCheckBox(CheckBox[] checkBoxes){
             int len=checkBoxes.length;
             for(int i=0;i<len;i++){
                 checkBoxes[i].setOnClickListener(new View.OnClickListener() {
@@ -352,11 +332,11 @@ public class StartActivity extends Activity {
                 }
             });
         }
-        void setDate(CheckBox[] date, int[] id) {
+        public void setDate(CheckBox[] date, int[] id) {
             matchCheckBox(date,id);
             setCheckBox(date);
         }
-        void setDate(CheckBox[] date, int[] id, Dialog dialog ){
+        public void setDate(CheckBox[] date, int[] id, Dialog dialog ){
             matchCheckBox(date,id,dialog);
             setCheckBox(date);
         }
