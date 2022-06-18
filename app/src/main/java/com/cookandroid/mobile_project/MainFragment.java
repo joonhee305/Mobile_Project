@@ -290,8 +290,7 @@ public class MainFragment extends Fragment {
                 btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(sqLiteDatabase==null) Toast.makeText(getActivity(),"없음",Toast.LENGTH_SHORT).show();
-                        else Toast.makeText(getActivity(),"있음", Toast.LENGTH_LONG).show();
+
                         sqLiteDatabase.execSQL("delete from toDayTBL where tId= ?;",new String[] {Integer.toString(tId)} );
 
                         Intent mainActivity=new Intent(getActivity(),MainActivity.class);
