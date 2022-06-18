@@ -27,6 +27,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.w3c.dom.Text;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 public class AddListActivity extends Activity {
@@ -56,7 +57,6 @@ public class AddListActivity extends Activity {
         chk_illjung = (CheckBox) findViewById(R.id.check_illjung);
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
         btn_save = (Button) findViewById(R.id.btn_save);
-        test = (TextView) findViewById(R.id.tv_test);
         layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
 
         breakfastTime=540;
@@ -219,7 +219,6 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
-                test.setText(boolToDo+" "+boolPill);
             }
 
         });
@@ -251,7 +250,6 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
-                test.setText(boolToDo+" "+boolPill);
             }
         });
         btn_save.setOnClickListener(new View.OnClickListener() {

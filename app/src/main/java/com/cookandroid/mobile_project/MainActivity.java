@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     public void checkFirstRun(){
         boolean isFirstRun=prefs.getBoolean("isFirstRun",true);
         if(isFirstRun){
-            Intent newIntent=new Intent(getApplicationContext(),StartActivity.class);
+            Intent newIntent=new Intent(getApplicationContext(), StartActivity.class);
             startActivity(newIntent);
             finish();
 
