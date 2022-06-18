@@ -8,6 +8,7 @@ import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -35,11 +36,15 @@ public class CameraActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 10;
     public static final int REQUEST_PERMISSION = 11;
 
+
     private Button btnCamera, btnSave;
     private ImageView ivCapture;
     private String mCurrentPhotoPath;
     private String picturePath;
     Intent getPath;
+    myDBHelper myDBHelper;
+    SQLiteDatabase sqLiteDatabase;
+    String[] hData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +52,20 @@ public class CameraActivity extends AppCompatActivity {
 
         checkPermission(); //권한체크
 
+        myDBHelper=new myDBHelper(this);
+        sqLiteDatabase=myDBHelper.getWritableDatabase();
+
+
         ivCapture = findViewById(R.id.ivCapture); //ImageView 선언
         btnCamera = findViewById(R.id.btnCapture); //Button 선언
         btnSave = findViewById(R.id.btnSave); //Button 선언
 
         getPath=getIntent();
         picturePath=getPath.getStringExtra("Path");
-        Toast.makeText(getApplicationContext(),picturePath,Toast.LENGTH_SHORT).show();
-        // loadImgArr();
+        hData=getPath.getStringArrayExtra("tData");
+
+        //Toast.makeText(getApplicationContext(),getFilesDir().toString(),Toast.LENGTH_SHORT).show();
+        //loadImgArr();
 
         //촬영
         btnCamera.setOnClickListener(v -> captrueCamera());
@@ -71,8 +82,19 @@ public class CameraActivity extends AppCompatActivity {
                     Toast.makeText(this, "저장할 사진이 없습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     //저장
+                    long now=System.currentTimeMillis();
+                    Date date= new Date(now);
+                    SimpleDateFormat sdfHour=new SimpleDateFormat("hh");
+                    SimpleDateFormat sdfMinute=new SimpleDateFormat("mm");
+                    int hTime=Integer.parseInt(sdfHour.format(date))*60+Integer.parseInt(sdfMinute.format(date));
                     saveImg(picturePath);
                     mCurrentPhotoPath = ""; //initialize
+                    sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tId = "+hData[3]+"");
+                    sqLiteDatabase.execSQL("insert into historyTBL values('"+hData[0]+"','"+hData[1]+"','"+hData[2]+"','"+hTime+"','"+picturePath+"');");
+                    //Toast.makeText(this,"사진 저장!",Toast.LENGTH_SHORT).show();
+                    Intent mainActivity=new Intent(this,MainActivity.class);
+                    startActivity(mainActivity);
+                    finish();
                 }
 
             } catch (Exception e) {
@@ -89,7 +111,7 @@ public class CameraActivity extends AppCompatActivity {
                 File tempImage=File.createTempFile(picturePath,".jpg",tempDir);
                 mCurrentPhotoPath=tempImage.getAbsolutePath();
                 photoFile=tempImage;
-                Toast.makeText(getApplicationContext(),photoFile.getPath(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),photoFile.getPath(),Toast.LENGTH_SHORT).show();
             }catch (IOException e) {
                 Log.w(TAG,"파일 생성 에러!",e);
             }
@@ -132,10 +154,10 @@ public class CameraActivity extends AppCompatActivity {
                 }
             }
             Log.e(TAG, "Captured Saved");
-            Toast.makeText(this, "Capture Saved ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "인증 완료!", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
             Log.w(TAG, "Capture Saving Error!", e);
-            Toast.makeText(this, "Save failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "인증 실패", Toast.LENGTH_SHORT).show();
         }
     }
     private void loadImgArr() {

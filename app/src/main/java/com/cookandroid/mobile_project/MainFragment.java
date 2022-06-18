@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -21,10 +23,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,10 +47,12 @@ public class MainFragment extends Fragment {
     TextView testText;
     int idx=300;
     public SharedPreferences prefs;
+    public ImageView iv;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
         Button btn_addList = (Button) v.findViewById(R.id.btnAddList);
+
         testText=v.findViewById(R.id.testText);
         layoutDoing=v.findViewById(R.id.layoutDoing);
         layoutExercise=v.findViewById(R.id.layoutExercise);
@@ -52,11 +62,17 @@ public class MainFragment extends Fragment {
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
         prefs= getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
-
+        iv=getActivity().findViewById(R.id.iv);
 //        Intent intent = getActivity().getIntent();
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-
+//        Cursor test=sqLiteDatabase.rawQuery("select * from historyTBL",null);
+//        String val="";
+//        while(test.moveToNext()){
+//            val+=test.getString(0)+" "+test.getString(1)+test.getString(2)
+//                    +" "+test.getString(3)+" "+test.getString(4)+"\n";
+//
+//        }
+//        testText.setText(val);
         String lastDate=prefs.getString("lastDate"," ");
 
 
@@ -100,10 +116,12 @@ public class MainFragment extends Fragment {
             routineCursor.close();
         }
         //데이터 삽입
+        try{
+            setToDay("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",sqLiteDatabase,layoutDoing);
+            setToDay("select * from toDayTBL where tType=='운동' order by tTime",sqLiteDatabase,layoutExercise);
+            setToDay("select * from toDayTBL where tType=='복약' order by tTime",sqLiteDatabase,layoutMedicine);
+        }catch (FileNotFoundException e){Log.e("error","에러발생");};
 
-        setToDay("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",sqLiteDatabase,layoutDoing);
-        setToDay("select * from toDayTBL where tType=='운동' order by tTime",sqLiteDatabase,layoutExercise);
-        setToDay("select * from toDayTBL where tType=='복약' order by tTime",sqLiteDatabase,layoutMedicine);
 
         btn_addList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +162,7 @@ public class MainFragment extends Fragment {
         return res;
     }
 
-    public void setToDay(String query,SQLiteDatabase sqLiteDatabase,LinearLayout layout){
+    public void setToDay(String query,SQLiteDatabase sqLiteDatabase,LinearLayout layout) throws FileNotFoundException {
         Cursor toDayCursor=sqLiteDatabase.rawQuery(query,null);
         while(toDayCursor.moveToNext()){
             Button btn=new Button(getActivity());
@@ -157,27 +175,58 @@ public class MainFragment extends Fragment {
             btn.setText(value);
             btn.setId(tId);
             String path=year+month+day+btn.getId();
+            String[] tData={tType,tName,year+month+day,tId+""};
             if(tCheck==0){
                 btn.setOnClickListener(new View.OnClickListener() {
                     Integer btnId=btn.getId();
                     @Override
                     public void onClick(View v) {
-                        sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tId = "+btnId+"");
-                       // sqLiteDatabase.execSQL("insert into historyTBL values('"+tType+"','"+tName+"',"+tTime+",0,"+idx+");");
                         Intent intent = new Intent(getActivity(), CameraActivity.class);
                         intent.putExtra("Path",path);
+                        intent.putExtra("tData",tData);
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 });
             }
             else{
+                //파일
+                File storageDir = new File(getActivity().getFilesDir() + "/capture");
+                String filename = path + ".jpg";
+                File file = new File(storageDir, filename);
+                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+
+                //다이얼로그
+                Dialog myPicture;
+                myPicture=new Dialog(getActivity());
+                myPicture.setContentView(R.layout.dialog_mypicture);
+
+                //다이얼 로그 내 버튼
+                TextView dlTitle=myPicture.findViewById(R.id.dlMyPictureTitle);
+                ImageView dlPicture=myPicture.findViewById(R.id.dlMyPictureImage);
+                Button dlFinish=myPicture.findViewById(R.id.dlMyPictureFinish);
+                dlFinish.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myPicture.dismiss();
+                    }
+                });
+
                 btn.setHeight(10);
                 btn.setBackgroundColor(Color.parseColor("#00ff00"));
                 btn.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(),"우효",Toast.LENGTH_SHORT).show();
+                        if(bitmap!=null) {
+                            dlPicture.setImageBitmap(bitmap);
+                            dlTitle.setText(tName);
+                            myPicture.show();
+                        }
+                        else Toast.makeText(getActivity(),"사진이 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(),"우효",Toast.LENGTH_SHORT).show();
+
+
                     }
                 });
             }
