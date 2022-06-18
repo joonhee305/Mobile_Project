@@ -266,8 +266,22 @@ public class AddListActivity extends Activity {
                     //시간 배열
                     int times=0;
                     //약 데이터
-                     Medicine m;
+                    Medicine m;
 
+                    Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
+                    
+                    //루틴에서 아침,점심,저녁 시간 가져오기
+                    while (routineCursor.moveToNext()){
+                    if(routineCursor.getString(0).equals("식사") && routineCursor.getString(1).equals("아침")){
+                        breakfastTime = routineCursor.getInt(3);
+                    }
+                    else if(routineCursor.getString(0).equals("식사") && routineCursor.getString(1).equals("점심")){
+                        lunchTime = routineCursor.getInt(3);
+                    }
+                    else if(routineCursor.getString(0).equals("식사") && routineCursor.getString(1).equals("저녁")){
+                        dinnerTime = routineCursor.getInt(3);
+                    }}
+                    
                     //요일 처리
                     for(int i=0;i<7;i++){
                         if(medDate[i].isChecked()) dates+=(int)Math.pow(2,i);
