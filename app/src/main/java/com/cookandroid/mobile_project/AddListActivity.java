@@ -102,7 +102,6 @@ public class AddListActivity extends Activity {
         LinearLayout linear_tableRow2 = new LinearLayout(this);
         linear_tableRow2.setOrientation(LinearLayout.HORIZONTAL);
 
-
         TextView tv_write_pill = new TextView(this);
         tv_write_pill.setText("복용하실 약을 적어주세요");
         tv_write_pill.setTextSize(25);
@@ -200,7 +199,7 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = true;
                 }
-                else{
+                else {
                     container.setVisibility(View.INVISIBLE);
                     container.removeAllViews();
                     boolToDo = false;
@@ -214,15 +213,15 @@ public class AddListActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if(chk_illjung.isChecked()==false && chk_pill.isChecked() == true){
-                    container .setVisibility(View.VISIBLE);
+                if (chk_illjung.isChecked()==false && chk_pill.isChecked() == true){
+                    container.setVisibility(View.VISIBLE);
                     container.addView(linear_pillName);
                     container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
                     boolToDo = false;
                     boolPill = true;
                 }
-                else if(chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
+                else if (chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
                     container .setVisibility(View.VISIBLE);
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);

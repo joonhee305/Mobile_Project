@@ -1,10 +1,8 @@
 package com.cookandroid.mobile_project;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = new Intent(this, LoadingActivity.class);
+        startActivity(intent);
         // 송지민이 추가한 프레그먼트 관련 코드
 
         //재시작 확인
@@ -68,16 +68,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                Log.d("MainActivity","선택된 탭 : "+position);
+                Log.d("MainActivity","선택된 탭 : "+ position);
                 Fragment selected = null;
-                if(position == 0){
+                if (position == 0) {
                     selected = mainFragment;
-                } else if(position == 1){
+                } else if (position == 1) {
                     selected = mainFragment;
-                }else if(position == 2){
+                }else if (position == 2) {
                     selected = mainFragment;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,selected).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, selected).commit();
             }
 
             @Override
@@ -103,10 +103,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void checkFirstRun(){
+    public void checkFirstRun()
+    {
         boolean isFirstRun=prefs.getBoolean("isFirstRun",true);
-        if(isFirstRun){
-            Intent newIntent=new Intent(getApplicationContext(),StartActivity.class);
+        if(isFirstRun)
+        {
+            Intent newIntent = new Intent(getApplicationContext(),StartActivity.class);
             startActivity(newIntent);
             finish();
 

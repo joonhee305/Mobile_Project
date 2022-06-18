@@ -2,10 +2,11 @@ package com.cookandroid.mobile_project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 
-public class LoadingActivity extends AppCompatActivity {
+public class LoadingActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,7 +14,8 @@ public class LoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading);
         startLoading();
     }
-    private void startLoading() {
+    private void startLoading()
+    {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

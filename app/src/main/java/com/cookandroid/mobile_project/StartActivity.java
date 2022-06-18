@@ -52,7 +52,8 @@ public class StartActivity extends Activity {
     SQLiteOpenHelper myHelper;
     Intent mainActivity;
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         mainActivity = new Intent(this, MainActivity.class);
@@ -129,7 +130,7 @@ public class StartActivity extends Activity {
         });
         //버튼 set
 
-        //기록하기
+        // 기록하기
         btnMem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,7 +179,7 @@ public class StartActivity extends Activity {
                 finish();
             }
         });
-        //약 추가
+        // 약 추가
         btnMedadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
