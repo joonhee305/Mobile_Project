@@ -101,12 +101,12 @@ public class AddListActivity extends Activity {
         LinearLayout linear_pillTime = new LinearLayout(this);
         linear_pillTime.setOrientation(LinearLayout.VERTICAL);
 
-        LinearLayout linear_tableLay = new LinearLayout(this);
-        linear_tableLay.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout linear_tableRow1 = new LinearLayout(this);
-        linear_tableRow1.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout linear_tableRow2 = new LinearLayout(this);
-        linear_tableRow2.setOrientation(LinearLayout.HORIZONTAL);
+//        LinearLayout linear_tableLay = new LinearLayout(this);
+//        linear_tableLay.setOrientation(LinearLayout.VERTICAL);
+//        LinearLayout linear_tableRow1 = new LinearLayout(this);
+//        linear_tableRow1.setOrientation(LinearLayout.HORIZONTAL);
+//        LinearLayout linear_tableRow2 = new LinearLayout(this);
+//        linear_tableRow2.setOrientation(LinearLayout.HORIZONTAL);
 
 
         TextView tv_write_pill = new TextView(this);
@@ -162,19 +162,19 @@ public class AddListActivity extends Activity {
         linear_pillName.addView(tv_write_pill);
         linear_pillName.addView(edt_piilName);
 
-        linear_tableRow1.addView(mon);
-        linear_tableRow1.addView(tue);
-        linear_tableRow1.addView(wed);
-        linear_tableRow1.addView(thur);
-
-        linear_tableRow2.addView(fri);
-        linear_tableRow2.addView(sat);
-        linear_tableRow2.addView(sun);
-        linear_tableRow2.addView(eve);
-
-        linear_tableLay.addView(tv_eat_date);
-        linear_tableLay.addView(linear_tableRow1);
-        linear_tableLay.addView(linear_tableRow2);
+//        linear_tableRow1.addView(mon);
+//        linear_tableRow1.addView(tue);
+//        linear_tableRow1.addView(wed);
+//        linear_tableRow1.addView(thur);
+//
+//        linear_tableRow2.addView(fri);
+//        linear_tableRow2.addView(sat);
+//        linear_tableRow2.addView(sun);
+//        linear_tableRow2.addView(eve);
+//
+//        linear_tableLay.addView(tv_eat_date);
+//        linear_tableLay.addView(linear_tableRow1);
+//        linear_tableLay.addView(linear_tableRow2);
 
         linear_pillTime.addView(tv_eat_time);
         linear_pillTime.addView(bfm);
@@ -204,7 +204,7 @@ public class AddListActivity extends Activity {
                     container .setVisibility(View.VISIBLE);
                     container.removeAllViews();
                     container.addView(linear_pillName);
-                    container.addView(linear_tableLay);
+//                    container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
                     boolToDo = false;
                     boolPill = true;
@@ -228,7 +228,7 @@ public class AddListActivity extends Activity {
                     container .setVisibility(View.VISIBLE);
                     container.removeAllViews();
                     container.addView(linear_pillName);
-                    container.addView(linear_tableLay);
+//                    container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
                     boolToDo = false;
                     boolPill = true;

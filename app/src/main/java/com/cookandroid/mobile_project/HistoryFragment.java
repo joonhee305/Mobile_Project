@@ -67,8 +67,9 @@ public class HistoryFragment extends Fragment {
                     String hName=historyCursor.getString(1);
                     int hTime=historyCursor.getInt(3);
                     String hPath=historyCursor.getString(4);
+                    String sHTime = timeToString(hTime);
 
-                    btn.setText(hName+" "+hTime);
+                    btn.setText(hName+" "+sHTime);
                     btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -99,18 +100,28 @@ public class HistoryFragment extends Fragment {
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
-
                         }
 
                     });
                     linearHistory.addView(btn);
                 }
-
             }
 
         });
 
         return v;
 
+    }
+    String timeToString(int t){
+        String res="";
+        //한자리면 앞에 0을 추가
+        if((t/60)%24<10) res+="0";
+        res+=(t/60)%24+":";
+        t%=60;
+        //한자리면 앞에 0을 추가
+        if(t<10) res+="0";
+        res+=t+"";
+
+        return res;
     }
 }
