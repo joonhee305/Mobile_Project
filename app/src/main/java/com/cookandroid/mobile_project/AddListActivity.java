@@ -2,7 +2,9 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -32,7 +34,6 @@ public class AddListActivity extends Activity {
     CheckBox chk_illjung, chk_pill;
     LinearLayout container, layoutTest;
     Button btn_save,btn_cancel;
-    TextView test;
     Boolean boolToDo = false, boolPill = false;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
@@ -42,10 +43,12 @@ public class AddListActivity extends Activity {
     ArrayList<Medicine> medicines;
     Intent mainActivity,mainFragment;
     int idx;
+    public SharedPreferences prefs;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addlist);
+        prefs= getSharedPreferences("Pref", Context.MODE_PRIVATE);
         myHelper=new myDBHelper(this);
         medicines=new ArrayList<>();
 
@@ -54,7 +57,6 @@ public class AddListActivity extends Activity {
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
         btn_save = (Button) findViewById(R.id.btn_save);
         btn_cancel=(Button) findViewById(R.id.btn_cancel);
-        test = (TextView) findViewById(R.id.tv_test);
         layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
 
         breakfastTime=540;
@@ -65,7 +67,8 @@ public class AddListActivity extends Activity {
         mainFragment=getIntent();
         idx=mainFragment.getIntExtra("idx",0);
 
-        Toast.makeText(getApplicationContext(),idx+"",Toast.LENGTH_SHORT).show();
+        //
+        // Toast.makeText(getApplicationContext(),idx+"",Toast.LENGTH_SHORT).show();
         //illjung
         LinearLayout linear_write_todo = new LinearLayout(this);
         linear_write_todo.setOrientation(LinearLayout.VERTICAL);
@@ -101,12 +104,12 @@ public class AddListActivity extends Activity {
         LinearLayout linear_pillTime = new LinearLayout(this);
         linear_pillTime.setOrientation(LinearLayout.VERTICAL);
 
-        LinearLayout linear_tableLay = new LinearLayout(this);
-        linear_tableLay.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout linear_tableRow1 = new LinearLayout(this);
-        linear_tableRow1.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout linear_tableRow2 = new LinearLayout(this);
-        linear_tableRow2.setOrientation(LinearLayout.HORIZONTAL);
+//        LinearLayout linear_tableLay = new LinearLayout(this);
+//        linear_tableLay.setOrientation(LinearLayout.VERTICAL);
+//        LinearLayout linear_tableRow1 = new LinearLayout(this);
+//        linear_tableRow1.setOrientation(LinearLayout.HORIZONTAL);
+//        LinearLayout linear_tableRow2 = new LinearLayout(this);
+//        linear_tableRow2.setOrientation(LinearLayout.HORIZONTAL);
 
 
         TextView tv_write_pill = new TextView(this);
@@ -162,19 +165,19 @@ public class AddListActivity extends Activity {
         linear_pillName.addView(tv_write_pill);
         linear_pillName.addView(edt_piilName);
 
-        linear_tableRow1.addView(mon);
-        linear_tableRow1.addView(tue);
-        linear_tableRow1.addView(wed);
-        linear_tableRow1.addView(thur);
-
-        linear_tableRow2.addView(fri);
-        linear_tableRow2.addView(sat);
-        linear_tableRow2.addView(sun);
-        linear_tableRow2.addView(eve);
-
-        linear_tableLay.addView(tv_eat_date);
-        linear_tableLay.addView(linear_tableRow1);
-        linear_tableLay.addView(linear_tableRow2);
+//        linear_tableRow1.addView(mon);
+//        linear_tableRow1.addView(tue);
+//        linear_tableRow1.addView(wed);
+//        linear_tableRow1.addView(thur);
+//
+//        linear_tableRow2.addView(fri);
+//        linear_tableRow2.addView(sat);
+//        linear_tableRow2.addView(sun);
+//        linear_tableRow2.addView(eve);
+//
+//        linear_tableLay.addView(tv_eat_date);
+//        linear_tableLay.addView(linear_tableRow1);
+//        linear_tableLay.addView(linear_tableRow2);
 
         linear_pillTime.addView(tv_eat_time);
         linear_pillTime.addView(bfm);
@@ -204,7 +207,7 @@ public class AddListActivity extends Activity {
                     container .setVisibility(View.VISIBLE);
                     container.removeAllViews();
                     container.addView(linear_pillName);
-                    container.addView(linear_tableLay);
+//                    container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
                     boolToDo = false;
                     boolPill = true;
@@ -215,7 +218,6 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
-                test.setText(boolToDo+" "+boolPill);
             }
 
         });
@@ -228,7 +230,7 @@ public class AddListActivity extends Activity {
                     container .setVisibility(View.VISIBLE);
                     container.removeAllViews();
                     container.addView(linear_pillName);
-                    container.addView(linear_tableLay);
+//                    container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
                     boolToDo = false;
                     boolPill = true;
@@ -247,7 +249,6 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
-                test.setText(boolToDo+" "+boolPill);
             }
         });
         btn_save.setOnClickListener(new View.OnClickListener() {
@@ -255,7 +256,7 @@ public class AddListActivity extends Activity {
             public void onClick(View view) {
                 sqLiteDatabase=myHelper.getWritableDatabase();
                 if(boolToDo){
-                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"',0,"+idx+");");
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"',0,"+idx+");"); idx++;
                 }
                 else if(boolPill){
                     //출력값
@@ -296,11 +297,11 @@ public class AddListActivity extends Activity {
                         }
                     }
                 }
+                prefs.edit().putInt("toDayIdx",idx).apply();
                 sqLiteDatabase.close();
                 startActivity(mainActivity);
                 finish();
             }
-
 
 
         });

@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -37,11 +38,11 @@ public class CameraActivity extends AppCompatActivity {
     public static final int REQUEST_PERMISSION = 11;
 
 
-    private Button btnCamera, btnSave;
+    private Button btnCamera, btnSave,btnCameraCancel;
     private ImageView ivCapture;
     private String mCurrentPhotoPath;
     private String picturePath;
-    Intent getPath;
+    Intent getPath, mainActivity;
     myDBHelper myDBHelper;
     SQLiteDatabase sqLiteDatabase;
     String[] hData;
@@ -49,7 +50,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
+        mainActivity = new Intent(this, MainActivity.class);
         checkPermission(); //권한체크
 
         myDBHelper=new myDBHelper(this);
@@ -59,6 +60,7 @@ public class CameraActivity extends AppCompatActivity {
         ivCapture = findViewById(R.id.ivCapture); //ImageView 선언
         btnCamera = findViewById(R.id.btnCapture); //Button 선언
         btnSave = findViewById(R.id.btnSave); //Button 선언
+        btnCameraCancel = findViewById(R.id.btnCameraCancel);
 
         getPath=getIntent();
         picturePath=getPath.getStringExtra("Path");
@@ -101,7 +103,17 @@ public class CameraActivity extends AppCompatActivity {
                 Log.w(TAG, "SAVE ERROR!", e);
             }
         });
+
+        btnCameraCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(mainActivity);
+                finish();
+            }
+        });
     }
+
     private void captrueCamera(){
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager())!=null){
@@ -193,10 +205,10 @@ public class CameraActivity extends AppCompatActivity {
                             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                     ExifInterface.ORIENTATION_UNDEFINED);
 
-//                            //사진해상도가 너무 높으면 비트맵으로 로딩
-//                            BitmapFactory.Options options = new BitmapFactory.Options();
-//                            options.inSampleSize = 8; //8분의 1크기로 비트맵 객체 생성
-//                            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+                            //사진해상도가 너무 높으면 비트맵으로 로딩
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inSampleSize = 8; //8분의 1크기로 비트맵 객체 생성
+                            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
                             Bitmap rotatedBitmap = null;
                             switch (orientation) {
