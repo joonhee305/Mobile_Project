@@ -32,7 +32,6 @@ public class AddListActivity extends Activity {
     CheckBox chk_illjung, chk_pill;
     LinearLayout container, layoutTest;
     Button btn_save,btn_cancel;
-    TextView test;
     Boolean boolToDo = false, boolPill = false;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
@@ -54,7 +53,6 @@ public class AddListActivity extends Activity {
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
         btn_save = (Button) findViewById(R.id.btn_save);
         btn_cancel=(Button) findViewById(R.id.btn_cancel);
-        test = (TextView) findViewById(R.id.tv_test);
         layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
 
         breakfastTime=540;
@@ -215,7 +213,6 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
-                test.setText(boolToDo+" "+boolPill);
             }
 
         });
@@ -247,7 +244,6 @@ public class AddListActivity extends Activity {
                     boolToDo = false;
                     boolPill = false;
                 }
-                test.setText(boolToDo+" "+boolPill);
             }
         });
         btn_save.setOnClickListener(new View.OnClickListener() {
