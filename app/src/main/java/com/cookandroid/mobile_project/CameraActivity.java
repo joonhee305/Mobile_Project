@@ -42,10 +42,12 @@ public class CameraActivity extends AppCompatActivity {
     private ImageView ivCapture;
     private String mCurrentPhotoPath;
     private String picturePath;
-    Intent getPath, mainActivity;
-    myDBHelper myDBHelper;
-    SQLiteDatabase sqLiteDatabase;
-    String[] hData;
+    private Intent getPath, mainActivity;
+    private myDBHelper myDBHelper;
+    private SQLiteDatabase sqLiteDatabase;
+    private String[] hData;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +57,6 @@ public class CameraActivity extends AppCompatActivity {
 
         myDBHelper=new myDBHelper(this);
         sqLiteDatabase=myDBHelper.getWritableDatabase();
-
 
         ivCapture = findViewById(R.id.ivCapture); //ImageView 선언
         btnCamera = findViewById(R.id.btnCapture); //Button 선언
@@ -114,6 +115,7 @@ public class CameraActivity extends AppCompatActivity {
         });
     }
 
+    //사진촬영
     private void captrueCamera(){
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager())!=null){
@@ -138,6 +140,7 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
+    //사진 저장
     private void saveImg(String path){
         try{
             File storageDir=new File(getFilesDir()+"/capture");
@@ -172,21 +175,23 @@ public class CameraActivity extends AppCompatActivity {
             Toast.makeText(this, "인증 실패", Toast.LENGTH_SHORT).show();
         }
     }
-    private void loadImgArr() {
-        try {
 
-            File storageDir = new File(getFilesDir() + "/capture");
-            String filename = "캡쳐파일" + ".jpg";
 
-            File file = new File(storageDir, filename);
-            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
-            ivCapture.setImageBitmap(bitmap);
-
-        } catch (Exception e) {
-            Log.w(TAG, "Capture loading Error!", e);
-            Toast.makeText(this, "load failed", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void loadImgArr() {
+//        try {
+//
+//            File storageDir = new File(getFilesDir() + "/capture");
+//            String filename = "캡쳐파일" + ".jpg";
+//
+//            File file = new File(storageDir, filename);
+//            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+//            ivCapture.setImageBitmap(bitmap);
+//
+//        } catch (Exception e) {
+//            Log.w(TAG, "Capture loading Error!", e);
+//            Toast.makeText(this, "load failed", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

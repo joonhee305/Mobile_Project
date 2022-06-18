@@ -42,15 +42,20 @@ import java.util.HashMap;
 
 
 public class MainFragment extends Fragment {
-    SQLiteDatabase sqLiteDatabase;
-    SQLiteOpenHelper myHelper;
-    HashMap<String,Integer> mapDate;
-    String month,day,d,nowDate,year;
-    LinearLayout layoutDoing, layoutExercise,layoutMedicine;
+    //운동 리스트 선언
+    private String[] youtubeURL = {"https://www.youtube.com/watch?v=lXUEMdde9hM","https://www.youtube.com/watch?v=I4ovzV-BLDU&t=529s",
+            "https://www.youtube.com/watch?v=U_Tv31zKYkk","https://www.youtube.com/watch?v=WTVoxQUbcGo&t=41s",
+            "https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=q-ySRwLEwY4"};
+    private String[] exerName = {"걷기운동","근력강화운동","아령운동","타바타운동","하체강화운동","찔레꽃운동","손가락운동"};
+    private SQLiteDatabase sqLiteDatabase;
+    private SQLiteOpenHelper myHelper;
+    private HashMap<String,Integer> mapDate;
+    private String month,day,d,nowDate,year;
+    private LinearLayout layoutDoing, layoutExercise,layoutMedicine;
     //TextView testText;
-    Button btnExer;
-    int idx=300;
-    public SharedPreferences prefs;
+    private Button btnExer;
+    private int idx=300;
+    private SharedPreferences prefs;
     //public ImageView iv;
     //int layoutIdx=1000;
     @Override
@@ -58,15 +63,6 @@ public class MainFragment extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
         Button btn_addList = (Button) v.findViewById(R.id.btnAddList);
 
-        String[] youtubeURL = {"https://www.youtube.com/watch?v=lXUEMdde9hM","https://www.youtube.com/watch?v=I4ovzV-BLDU&t=529s",
-                "https://www.youtube.com/watch?v=U_Tv31zKYkk","https://www.youtube.com/watch?v=WTVoxQUbcGo&t=41s",
-                "https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=q-ySRwLEwY4"};
-        String[] exerName = {"걷기운동","근력강화운동","아령운동","타바타운동","하체강화운동","찔레꽃운동","손가락운동"};
-
-
-
-
-        //testText=(TextView) v.findViewById(R.id.testText);
         layoutDoing=(LinearLayout) v.findViewById(R.id.layoutDoing);
         layoutExercise=(LinearLayout) v.findViewById(R.id.layoutExercise);
         layoutMedicine=(LinearLayout) v.findViewById(R.id.layoutMedicine);
@@ -77,48 +73,39 @@ public class MainFragment extends Fragment {
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
         prefs= getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
-//        Intent intent = getActivity().getIntent();
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        Cursor test=sqLiteDatabase.rawQuery("select * from historyTBL",null);
-//        String val="";
-//        while(test.moveToNext()){
-//            val+=test.getString(0)+" "+test.getString(1)+test.getString(2)
-//                    +" "+test.getString(3)+" "+test.getString(4)+"\n";
-//
-//        }
-//        testText.setText(val);
+
+        //최근 실행했을 때의 날짜 가져오기
         String lastDate=prefs.getString("lastDate"," ");
 
-
-        //날짜
+        //현재 날짜 가져오기
         long now=System.currentTimeMillis();
         Date date= new Date(now);
         SimpleDateFormat sdfMonth=new SimpleDateFormat("MM");
         SimpleDateFormat sdfDay=new SimpleDateFormat("dd");
         SimpleDateFormat sdfD=new SimpleDateFormat("EE");
         SimpleDateFormat sdfYear=new SimpleDateFormat("yyyy");
-
-        Cursor toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL",null);
-        idx+=toDayCursor.getCount();
         month=sdfMonth.format(date);
         day=sdfDay.format(date);
         d=sdfD.format(date);
         year=sdfYear.format(date);
         nowDate=month+day+d;
 
-        int index = Integer.parseInt(day)%7;
-        btnExer.setText(exerName[index]);
-        //String asdf="lastDate : "+lastDate+"nowDate : "+nowDate;
 
+
+        //오늘 일정의 데이터
+        Cursor toDayCursor=sqLiteDatabase.rawQuery("select * from toDayTBL",null);
         if(!nowDate.equals(lastDate) || toDayCursor.getCount()==0){
+            //일정 키값 및 이전 날짜 갱신
             idx=300;
             prefs.edit().putInt("toDayIdx",300).apply();
             prefs.edit().putString("lastDate",nowDate).apply();
             toDayCursor.close();
+            //테이블 초기화
             sqLiteDatabase.execSQL("delete from toDayTBL");
+            //루틴 가져오기
             Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
 
-
+            //루틴으로 toDayTBL 채우기
             while(routineCursor.moveToNext()){
                 String tType,tName;
                 int tTime;
@@ -132,17 +119,23 @@ public class MainFragment extends Fragment {
                 }
             }
             routineCursor.close();
+            //일정 키값 갱신
             prefs.edit().putInt("toDayIdx",idx).apply();
         }
+
+        //일정 키값 가져오기
         idx=prefs.getInt("toDayIdx",300);
         //데이터 삽입
+
         try{
             setToDay("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",sqLiteDatabase,layoutDoing);
             setToDay("select * from toDayTBL where tType=='운동' order by tTime",sqLiteDatabase,layoutExercise);
             setToDay("select * from toDayTBL where tType=='복약' order by tTime",sqLiteDatabase,layoutMedicine);
         }catch (FileNotFoundException e){Log.e("error","에러발생");};
 
-//      운동
+        //운동 추천하기
+        int index = Integer.parseInt(day)%7;
+        btnExer.setText(exerName[index]);
         btnExer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,21 +144,21 @@ public class MainFragment extends Fragment {
             }
         });
 
+        //일정 추가
         btn_addList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddListActivity.class);
                 intent.putExtra("idx",idx);
-                //Toast.makeText(getActivity(),idx+"",Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 getActivity().finish();
-
-//                Toast.makeText(getActivity(),"이건가?",Toast.LENGTH_SHORT).show();
             }
         });
 
         return v;
     }
+
+    //월~일에 해당하는 비트값 선언
     public void setMapDate(HashMap<String,Integer> mapDate){
         mapDate.put("월",1);mapDate.put("Mon",1);
         mapDate.put("화",2);mapDate.put("Tue",2);
@@ -176,7 +169,7 @@ public class MainFragment extends Fragment {
         mapDate.put("일",64);mapDate.put("Sun",64);
     }
 
-    //정수를 시간으로 고쳐줌
+    //시간값을 hh:mm 꼴로 변경
     public String timeToString(int t){
         String res="";
         //한자리면 앞에 0을 추가
@@ -189,43 +182,51 @@ public class MainFragment extends Fragment {
 
         return res;
     }
-
+    //버튼 생성
     public void setToDay(String query,SQLiteDatabase sqLiteDatabase,LinearLayout layout) throws FileNotFoundException {
         Cursor toDayCursor=sqLiteDatabase.rawQuery(query,null);
         while(toDayCursor.moveToNext()){
             LinearLayout newLayout=new LinearLayout(getActivity());
             newLayout.setOrientation(LinearLayout.HORIZONTAL);
-            LinearLayout.LayoutParams mLayoutParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            //버튼과 레이아웃에 설정해줄 파라미터 선언
+            LinearLayout.LayoutParams mLayoutParams=
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             mLayoutParams.rightMargin=5;
             mLayoutParams.leftMargin=5;
             mLayoutParams.bottomMargin=10;
             mLayoutParams.weight=1;
 
-
-            //데이터 버튼, 수정버튼, 삭제버튼
-            Button btn=new Button(getActivity());
-
-            LinearLayout.LayoutParams btnSubParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            //수정 및 삭제버튼에 적용할 파라미터
+            LinearLayout.LayoutParams btnSubParams=
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             btnSubParams.weight=2;
             btnSubParams.bottomMargin=10;
 
+            //데이터 버튼, 수정버튼, 삭제버튼
+            Button btn=new Button(getActivity());
             Button btnUpdate=new Button(getActivity());
             Button btnDelete=new Button(getActivity());
 
-            //데이터 버튼 셋팅
+            //쿼리로 가져온 데이터
             String tType=toDayCursor.getString(0);
             String tName=toDayCursor.getString(1);
             int tTime=toDayCursor.getInt(2);
             int tCheck=toDayCursor.getInt(3);
             int tId=toDayCursor.getInt(4);
             String value=tName+" "+timeToString(tTime);
+
+            //버튼 셋팅
             btn.setText(value);
             btn.setId(tId);
             String path=year+month+day+btn.getId();
             String[] tData={tType,tName,year+month+day,tId+""};
 
+            //수정 및 삭제 버튼
             btnUpdate.setText("수정");
             btnDelete.setText("삭제");
+
+            //tCheck가 0 인증되지 않은 일정, 1이면 인증된 일정
             if(tCheck==0){
                 btn.setOnClickListener(new View.OnClickListener() {
                     Integer btnId=btn.getId();
@@ -243,6 +244,7 @@ public class MainFragment extends Fragment {
                 btnUpdate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //수정 다이얼로그 선언
                         Dialog update;
                         update=new Dialog(getActivity());
                         update.setContentView(R.layout.dialog_update);
@@ -254,6 +256,7 @@ public class MainFragment extends Fragment {
                         EditText updateHour=update.findViewById(R.id.updateHour);
                         EditText updateMinute=update.findViewById(R.id.updateMinute);
 
+                        //수정하기 버튼
                         updateSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -268,6 +271,7 @@ public class MainFragment extends Fragment {
                                         h=Integer.parseInt(hour);
                                         m=Integer.parseInt(minute);
                                         t=h*60+m;
+                                        //동일한 id를 가진 데이터의 이름과 시간을 수정
                                         sqLiteDatabase.execSQL("update toDayTBL set tName='"+name+"', tTime="+t+" where tId = "+tId+"");
 
                                         Intent mainActivity=new Intent(getActivity(),MainActivity.class);
@@ -278,12 +282,10 @@ public class MainFragment extends Fragment {
                                     }catch (Exception e){
                                         Toast.makeText(getActivity(),"시간을 다시 입력해주세요",Toast.LENGTH_SHORT).show();
                                     }
-
                                 }
-
-
                             }
                         });
+                        //취소버튼
                         updateCancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -297,6 +299,7 @@ public class MainFragment extends Fragment {
                 btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //삭제 다이얼로그
                         Dialog delete;
                         delete=new Dialog(getActivity());
                         delete.setContentView(R.layout.dialog_delete);
@@ -305,9 +308,11 @@ public class MainFragment extends Fragment {
                         Button deleteYes=delete.findViewById(R.id.deleteYes);
                         Button deleteNo=delete.findViewById(R.id.deleteNo);
 
+                        //삭제하기
                         deleteYes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                //해당 아이디를 가진 데이터를 삭제
                                 sqLiteDatabase.execSQL("delete from toDayTBL where tId= ?;",new String[] {Integer.toString(tId)} );
 
                                 Intent mainActivity=new Intent(getActivity(),MainActivity.class);
@@ -316,6 +321,8 @@ public class MainFragment extends Fragment {
                                 getActivity().finish();
                             }
                         });
+
+                        //취소하기
                         deleteNo.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -331,7 +338,7 @@ public class MainFragment extends Fragment {
                 newLayout.addView(btnDelete,btnSubParams);
             }
             else{
-                //파일
+                //사진 파일 가져오기
                 File storageDir = new File(getActivity().getFilesDir() + "/capture");
                 String filename = path + ".jpg";
                 File file = new File(storageDir, filename);
@@ -359,27 +366,26 @@ public class MainFragment extends Fragment {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //사진이 있다면 다이얼로그로 사진 보여주기
                         if(bitmap!=null) {
                             dlPicture.setImageBitmap(bitmap);
                             dlTitle.setText(tName);
                             myPicture.show();
                         }
+                        //사진이 없다면
                         else Toast.makeText(getActivity(),"사진이 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
                         //Toast.makeText(getActivity(),"우효",Toast.LENGTH_SHORT).show();
 
 
                     }
                 });
+                //버튼들 모음 레이아웃 추가
                 newLayout.addView(btn,mLayoutParams);
             }
-//            LinearLayout.LayoutParams btnParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-//            btnParams.bottomMargin=10;
-//            btnParams.leftMargin=5;
-//            btnParams.rightMargin=5;
-//            btn.setLayoutParams(btnParams);
-
+            //버튼 모음 레이아웃을 기존 레이아웃에 추가
             layout.addView(newLayout,mLayoutParams);
         }
+        //오늘의 일정 커서 종료
         toDayCursor.close();
     }
 }

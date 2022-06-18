@@ -40,27 +40,34 @@ import java.util.ListIterator;
 
 public class StartActivity extends Activity {
     public static Context context;
-    SetWidget setWidget;
-    Button btnMedadd,btnMem,btnSave,btnCancle;
-    EditText edtMedName;
-    CheckBox chkBreakfast,chkLunch,chkDinner;
-    CheckBox[] exerDate,medDate,medTime;
-    int[] exerId,medDateId,medTimeId;
-    LinearLayout layoutMed;
-    TimePicker breakTimePicker, lunchTimePicker,dinnerTimePicker,exerTimePicker;
-    ArrayList<Medicine> medicines;
-    Integer breakfastTime,lunchTime,dinnerTime,exerciseTime;
-    SQLiteDatabase sqLiteDatabase;
-    SQLiteOpenHelper myHelper;
-    Intent mainActivity;
+    private SetWidget setWidget;
+    private Button btnMedadd,btnMem,btnSave,btnCancle;
+    private EditText edtMedName;
+    private CheckBox chkBreakfast,chkLunch,chkDinner;
+    private CheckBox[] exerDate,medDate,medTime;
+    private int[] exerId,medDateId,medTimeId;
+    private LinearLayout layoutMed;
+    private TimePicker breakTimePicker, lunchTimePicker,dinnerTimePicker,exerTimePicker;
+    private ArrayList<Medicine> medicines;
+    private Integer breakfastTime,lunchTime,dinnerTime,exerciseTime;
+    private SQLiteDatabase sqLiteDatabase;
+    private SQLiteOpenHelper myHelper;
+    private Intent mainActivity;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        //저장 후 다시 시작할 액티비티
         mainActivity = new Intent(this, MainActivity.class);
+
+        //데이터베이스 커넥션
         myHelper=new myDBHelper(this);
+
+        //위젯용 함수
         setWidget=new SetWidget();
+
         //기록하기
         btnMem=(Button) findViewById(R.id.btnMem);
 
@@ -70,7 +77,7 @@ public class StartActivity extends Activity {
         lunchTime=720;
         dinnerTime=1080;
 
-
+        //식사 관련 위젯 선언
         chkBreakfast=findViewById(R.id.chkBreakfast);
         chkLunch=findViewById(R.id.chkLunch);
         chkDinner=findViewById(R.id.chkDinner);
@@ -81,6 +88,7 @@ public class StartActivity extends Activity {
         dinnerTimePicker=findViewById(R.id.dinnerTimePicker);
         dinnerTimePicker.setHour(18); dinnerTimePicker.setMinute(0);
 
+        //아침 시간 변경
         breakTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -89,6 +97,7 @@ public class StartActivity extends Activity {
                 }
             }
         });
+        //점심 시간 변경
         lunchTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -97,6 +106,7 @@ public class StartActivity extends Activity {
                 }
             }
         });
+        //저녁 시간 변경
         dinnerTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -119,6 +129,8 @@ public class StartActivity extends Activity {
         exerTimePicker=findViewById(R.id.exerTimePicker);
         setWidget.setDate(exerDate,exerId);
         exerciseTime=960;
+
+        //운동 시간 변경시
         exerTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -151,7 +163,6 @@ public class StartActivity extends Activity {
                 if(chkDinner.isChecked()){
                     sqLiteDatabase.execSQL("insert into routineTBL values('식사','저녁',127,'"+dinnerTime+"');");
                 }
-                //"+key.toString()+"','
 
                 for(Medicine medicine : medicines){
                     int t=medicine.times;
@@ -203,7 +214,6 @@ public class StartActivity extends Activity {
                 medTimeId=new int[]{R.id.breakBf,R.id.breakAf,R.id.lunchBf,R.id.lunchAf,R.id.dinnerBf,R.id.dinnerAf};
                 setWidget.matchCheckBox(medTime,medTimeId,addMed);
 
-
                 //다이얼로그 버튼
                 btnSave=addMed.findViewById(R.id.btnSave);
                 btnCancle=addMed.findViewById(R.id.btnCancle);
@@ -216,18 +226,15 @@ public class StartActivity extends Activity {
                             Toast.makeText(getApplicationContext(), "약이름을 입력해주세요",Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            //출력값
+                            //출력값 //요일 값 //시간 배열 //약 데이터
                             String value;
-                            //요일 값 //시간 배열
                             int dates=0, times=0;
-                            //약 데이터
                             Medicine m;
 
                             //요일 처리
                             for(int i=0;i<7;i++){
                                 if(medDate[i].isChecked()) dates+=(int)Math.pow(2,i);
                             }
-
                             //시간 처리
                             for(int i=0;i<6;i++){
                                 if(medTime[i].isChecked()) {
@@ -236,10 +243,7 @@ public class StartActivity extends Activity {
                             }
                             m=new Medicine(name, dates, times);
                             medicines.add(m);
-                            layoutMed.addView(btnMed);
-                            value=name+"\n"+dates;
-
-                            btnMed.setText(value);
+                            btnMed.setText(name);
                             addMed.dismiss();
                         }
 
@@ -258,6 +262,7 @@ public class StartActivity extends Activity {
     }
 
     public class SetWidget{
+        //체크박스와 아이디 연결
         public void matchCheckBox(CheckBox[] checkBoxes,int[] id){
             int len=checkBoxes.length;
             for(int i=0;i<len;i++){
@@ -270,6 +275,8 @@ public class StartActivity extends Activity {
                 checkBoxes[i]=dialog.findViewById(id[i]);
             }
         }
+
+        //체크박스 매일버튼 구현
         public void setCheckBox(CheckBox[] checkBoxes){
             int len=checkBoxes.length;
             for(int i=0;i<len;i++){
@@ -301,6 +308,8 @@ public class StartActivity extends Activity {
                 }
             });
         }
+
+        //체크박스와 아이디 연결
         public void setDate(CheckBox[] date, int[] id) {
             matchCheckBox(date,id);
             setCheckBox(date);
@@ -310,6 +319,8 @@ public class StartActivity extends Activity {
             setCheckBox(date);
         }
     }
+
+    //약 클래스
     public class Medicine{
         String name;
         int dates;
