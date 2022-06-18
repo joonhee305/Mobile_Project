@@ -2,7 +2,6 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +16,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,15 +40,16 @@ import java.util.HashMap;
 
 
 public class MainFragment extends Fragment {
-    SQLiteDatabase sqLiteDatabase;
-    SQLiteOpenHelper myHelper;
-    HashMap<String,Integer> mapDate;
-    String month,day,d,nowDate,year;
-    LinearLayout layoutDoing, layoutExercise,layoutMedicine;
+    private SQLiteDatabase sqLiteDatabase;
+    private SQLiteOpenHelper myHelper;
+    private HashMap<String,Integer> mapDate;
+    private String month,day,d,nowDate,year;
+    private LinearLayout layoutDoing, layoutExercise,layoutMedicine;
     TextView testText;
     int idx=300;
     public SharedPreferences prefs;
     public ImageView iv;
+    int layoutIdx=1000;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
@@ -92,14 +94,13 @@ public class MainFragment extends Fragment {
         year=sdfYear.format(date);
         nowDate=month+day+d;
 
-        //String asdf="lastDate : "+lastDate+"nowDate : "+nowDate;
-
         if(!nowDate.equals(lastDate) || toDayCursor.getCount()==0){
+            idx=300;
+            prefs.edit().putInt("toDayIdx",300).apply();
             prefs.edit().putString("lastDate",nowDate).apply();
             toDayCursor.close();
             sqLiteDatabase.execSQL("delete from toDayTBL");
             Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
-
 
             while(routineCursor.moveToNext()){
                 String tType,tName;
@@ -114,7 +115,9 @@ public class MainFragment extends Fragment {
                 }
             }
             routineCursor.close();
+            prefs.edit().putInt("toDayIdx",idx);
         }
+        idx=prefs.getInt("toDayIdx",300);
         //데이터 삽입
         try{
             setToDay("select * from toDayTBL where tType=='식사' or tType=='일정' order by tTime",sqLiteDatabase,layoutDoing);
@@ -165,7 +168,27 @@ public class MainFragment extends Fragment {
     public void setToDay(String query,SQLiteDatabase sqLiteDatabase,LinearLayout layout) throws FileNotFoundException {
         Cursor toDayCursor=sqLiteDatabase.rawQuery(query,null);
         while(toDayCursor.moveToNext()){
+            LinearLayout newLayout=new LinearLayout(getActivity());
+            newLayout.setId(layoutIdx++);
+            newLayout.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams mLayoutParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            mLayoutParams.rightMargin=5;
+            mLayoutParams.leftMargin=5;
+            mLayoutParams.bottomMargin=10;
+            mLayoutParams.weight=1;
+
+
+            //데이터 버튼, 수정버튼, 삭제버튼
             Button btn=new Button(getActivity());
+
+            LinearLayout.LayoutParams btnSubParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            btnSubParams.weight=2;
+            btnSubParams.bottomMargin=10;
+
+            Button btnRemote=new Button(getActivity());
+            Button btnDelete=new Button(getActivity());
+
+            //데이터 버튼 셋팅
             String tType=toDayCursor.getString(0);
             String tName=toDayCursor.getString(1);
             int tTime=toDayCursor.getInt(2);
@@ -176,6 +199,9 @@ public class MainFragment extends Fragment {
             btn.setId(tId);
             String path=year+month+day+btn.getId();
             String[] tData={tType,tName,year+month+day,tId+""};
+
+            btnRemote.setText("수정");
+            btnDelete.setText("삭제");
             if(tCheck==0){
                 btn.setOnClickListener(new View.OnClickListener() {
                     Integer btnId=btn.getId();
@@ -188,6 +214,30 @@ public class MainFragment extends Fragment {
                         getActivity().finish();
                     }
                 });
+
+                //수정 버튼
+                btnRemote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Dialog dlgRemote;
+                    }
+                });
+
+                //삭제 버튼
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sqLiteDatabase.execSQL("delete from toDayTBL where tId='"+ tId+"'",null);
+                        Intent mainActivity=new Intent(getActivity(),MainActivity.class);
+                        startActivity(mainActivity);
+                        getActivity().finish();
+                    }
+                });
+
+                //버튼 추가
+                newLayout.addView(btn,mLayoutParams);
+                newLayout.addView(btnRemote,btnSubParams);
+                newLayout.addView(btnDelete,btnSubParams);
             }
             else{
                 //파일
@@ -229,13 +279,15 @@ public class MainFragment extends Fragment {
 
                     }
                 });
+                newLayout.addView(btn,mLayoutParams);
             }
-            layout.addView(btn);
-            LinearLayout.LayoutParams mLayoutParams=(LinearLayout.LayoutParams) btn.getLayoutParams();
-            mLayoutParams.bottomMargin=10;
-            mLayoutParams.leftMargin=5;
-            mLayoutParams.rightMargin=5;
-            btn.setLayoutParams(mLayoutParams);
+            LinearLayout.LayoutParams btnParams=(LinearLayout.LayoutParams) btn.getLayoutParams();
+            btnParams.bottomMargin=10;
+            btnParams.leftMargin=5;
+            btnParams.rightMargin=5;
+            btn.setLayoutParams(btnParams);
+
+            layout.addView(newLayout,mLayoutParams);
         }
         toDayCursor.close();
     }

@@ -139,10 +139,9 @@ public class StartActivity extends Activity {
         btnMem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long now=System.currentTimeMillis();
-                Date key=new Date(now);
                 sqLiteDatabase=myHelper.getWritableDatabase();
-                myHelper.onUpgrade(sqLiteDatabase,1,2);
+                sqLiteDatabase.execSQL("delete from routineTBL");
+
                 if(chkBreakfast.isChecked()){
                     sqLiteDatabase.execSQL("insert into routineTBL values('식사','아침',127,'"+breakfastTime+"');");
                 }
@@ -171,7 +170,6 @@ public class StartActivity extends Activity {
                             sqLiteDatabase.execSQL("insert into routineTBL values('복약','"+medicine.name+"',"+medicine.dates+","+mtime+");");
                         }
                     }
-                    //sqLiteDatabase.execSQL("insert into routineTBL values('식사','"+medicine.name+"',"+medecine.times+",'"+breakfastTime+"'')");
                 }
 
                 int exerDates=0;
