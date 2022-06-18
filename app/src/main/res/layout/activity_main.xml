@@ -43,6 +43,11 @@
                 android:layout_height="wrap_content"
                 android:text="reset"
                 />
+            <Button
+                android:id="@+id/btnResetRoutine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="루틴 수정"/>
         </com.google.android.material.appbar.AppBarLayout>
         <FrameLayout
             android:layout_width="match_parent"

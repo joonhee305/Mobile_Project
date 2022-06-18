@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     MainFragment mainFragment;
     HistoryFragment historyFragment;
 
-    Button reset;
+    Button reset,btnResetRoutine;
     TextView titleDate;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
@@ -39,12 +40,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // 송지민이 추가한 프레그먼트 관련 코드
 
+//        데베 수정후 첫실행 할 때 초기화
 //        myHelper=new myDBHelper(this);
 //        sqLiteDatabase=myHelper.getWritableDatabase();
 //        myHelper.onUpgrade(sqLiteDatabase,1,2);
 //        sqLiteDatabase.close();
 
         //재시작 확인
+
         prefs=getSharedPreferences("Pref",MODE_PRIVATE);
         checkFirstRun();
         //바 설정
@@ -109,6 +112,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnResetRoutine = (Button) findViewById(R.id.btnResetRoutine);
+        btnResetRoutine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startActivity=new Intent(getApplicationContext(),StartActivity.class);
+                startActivity(startActivity);
+                finish();
+            }
+        });
 
     }
 
