@@ -77,7 +77,6 @@ public class MainFragment extends Fragment {
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
         prefs= getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
-
 //        Intent intent = getActivity().getIntent();
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //        Cursor test=sqLiteDatabase.rawQuery("select * from historyTBL",null);
