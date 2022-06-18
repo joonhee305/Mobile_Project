@@ -41,7 +41,7 @@ import java.util.ListIterator;
 public class StartActivity extends Activity {
     public static Context context;
     SetWidget setWidget;
-    Button btnMedadd,btnMem,btnSave,btnCancle,btnReset,btnGet;
+    Button btnMedadd,btnMem,btnSave,btnCancle;
     EditText edtMedName;
     CheckBox chkBreakfast,chkLunch,chkDinner;
     CheckBox[] exerDate,medDate,medTime;
@@ -253,37 +253,8 @@ public class StartActivity extends Activity {
                 });
             }
         });
-        //불러오기
 
-        btnGet=findViewById(R.id.btnGet);
-        btnReset=findViewById(R.id.btnReset);
-        btnGet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout layoutTest=findViewById(R.id.layoutTest);
-                Cursor cursor;
-                sqLiteDatabase=myHelper.getWritableDatabase();
-                cursor=sqLiteDatabase.rawQuery("select * from routineTBL;",null);
-                while(cursor.moveToNext()){
-                    TextView ntextView=new TextView(StartActivity.this);
-                    String val="";
-                    for(int i=0;i<4;i++) val+=cursor.getString(i)+" ";
 
-                    ntextView.setText(val);
-                    layoutTest.addView(ntextView);
-                }
-                sqLiteDatabase.close();
-            }
-        });
-        //새로고침
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sqLiteDatabase=myHelper.getWritableDatabase();
-                myHelper.onUpgrade(sqLiteDatabase,1,2);
-                sqLiteDatabase.close();
-            }
-        });
     }
 
     public class SetWidget{

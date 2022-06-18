@@ -2,6 +2,7 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,12 +13,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,12 +42,13 @@ import java.util.HashMap;
 
 
 public class MainFragment extends Fragment {
-    private SQLiteDatabase sqLiteDatabase;
-    private SQLiteOpenHelper myHelper;
-    private HashMap<String,Integer> mapDate;
-    private String month,day,d,nowDate,year;
-    private LinearLayout layoutDoing, layoutExercise,layoutMedicine;
+    SQLiteDatabase sqLiteDatabase;
+    SQLiteOpenHelper myHelper;
+    HashMap<String,Integer> mapDate;
+    String month,day,d,nowDate,year;
+    LinearLayout layoutDoing, layoutExercise,layoutMedicine;
     TextView testText;
+    Button btnExer;
     int idx=300;
     public SharedPreferences prefs;
     public ImageView iv;
@@ -56,10 +58,20 @@ public class MainFragment extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
         Button btn_addList = (Button) v.findViewById(R.id.btnAddList);
 
+        String[] youtubeURL = {"https://www.youtube.com/watch?v=lXUEMdde9hM","https://www.youtube.com/watch?v=I4ovzV-BLDU&t=529s",
+                "https://www.youtube.com/watch?v=U_Tv31zKYkk","https://www.youtube.com/watch?v=WTVoxQUbcGo&t=41s",
+                "https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=q-ySRwLEwY4"};
+        String[] exerName = {"걷기운동","근력강화운동","아령운동","타바타운동","하체강화운동","찔레꽃운동","손가락운동"};
+
+
+
+
         testText=v.findViewById(R.id.testText);
         layoutDoing=v.findViewById(R.id.layoutDoing);
         layoutExercise=v.findViewById(R.id.layoutExercise);
         layoutMedicine=v.findViewById(R.id.layoutMedicine);
+        btnExer = (Button) v.findViewById(R.id.btnExer);
+
         mapDate=new HashMap<String,Integer>();
         setMapDate(mapDate);
         myHelper=new myDBHelper(getActivity());
@@ -78,8 +90,7 @@ public class MainFragment extends Fragment {
 //        testText.setText(val);
         String lastDate=prefs.getString("lastDate"," ");
 
-        Intent addlist=getActivity().getIntent();
-        idx=prefs.getInt("toDayIdx",300);
+
         //날짜
         long now=System.currentTimeMillis();
         Date date= new Date(now);
@@ -96,6 +107,10 @@ public class MainFragment extends Fragment {
         year=sdfYear.format(date);
         nowDate=month+day+d;
 
+        int index = Integer.parseInt(day)%7;
+        btnExer.setText(exerName[index]);
+        //String asdf="lastDate : "+lastDate+"nowDate : "+nowDate;
+
         if(!nowDate.equals(lastDate) || toDayCursor.getCount()==0){
             idx=300;
             prefs.edit().putInt("toDayIdx",300).apply();
@@ -103,6 +118,7 @@ public class MainFragment extends Fragment {
             toDayCursor.close();
             sqLiteDatabase.execSQL("delete from toDayTBL");
             Cursor routineCursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
+
 
             while(routineCursor.moveToNext()){
                 String tType,tName;
@@ -127,6 +143,14 @@ public class MainFragment extends Fragment {
             setToDay("select * from toDayTBL where tType=='복약' order by tTime",sqLiteDatabase,layoutMedicine);
         }catch (FileNotFoundException e){Log.e("error","에러발생");};
 
+//      운동
+        btnExer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeURL[index]));
+                startActivity(intent);
+            }
+        });
 
         btn_addList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,7 +331,7 @@ public class MainFragment extends Fragment {
                 });
 
                 btn.setHeight(10);
-                btn.setBackgroundColor(Color.parseColor("#00ff00"));
+                btn.setBackgroundColor(Color.parseColor("#B7FF9C"));
                 btn.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -323,7 +347,6 @@ public class MainFragment extends Fragment {
 
                     }
                 });
-                newLayout.addView(btn,mLayoutParams);
             }
             LinearLayout.LayoutParams btnParams=(LinearLayout.LayoutParams) btn.getLayoutParams();
             btnParams.bottomMargin=10;
