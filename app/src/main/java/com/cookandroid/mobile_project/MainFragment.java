@@ -249,9 +249,11 @@ public class MainFragment extends Fragment {
                         update.show();
 
                         Button updateSave=update.findViewById(R.id.updateSave);
+                        Button updateCancel=update.findViewById(R.id.updateCancel);
                         EditText updateName=update.findViewById(R.id.upDateName);
                         EditText updateHour=update.findViewById(R.id.updateHour);
                         EditText updateMinute=update.findViewById(R.id.updateMinute);
+
                         updateSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -282,7 +284,12 @@ public class MainFragment extends Fragment {
 
                             }
                         });
-                        //sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tName = "++"");
+                        updateCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                update.dismiss();
+                            }
+                        });
                     }
                 });
 
