@@ -11,20 +11,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/AddList_Linear1"
+            android:id="@+id/AddList_Linear"
             android:orientation="vertical">
             <TextView
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/AddList_Category"
+                android:id="@+id/category_title"
                 android:text="카테고리를 선택해주세요"
                 android:textSize="25dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/AddList_Linear2"
+                android:id="@+id/Addlist_category"
                 android:orientation="horizontal">
                 <CheckBox
                     android:id="@+id/check_illjung"
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/AddList_Linear3"
+                android:id="@+id/AddList_button"
                 android:layout_margin="10dp">
                 <Button
                     android:id="@+id/btn_save"
@@ -71,12 +71,12 @@
                     android:layout_margin="10dp"
                     android:text="취소"/>
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layoutTest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                />
+<!--            <LinearLayout-->
+<!--                android:id="@+id/layoutTest"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                />-->
 
         </LinearLayout>
     </ScrollView>

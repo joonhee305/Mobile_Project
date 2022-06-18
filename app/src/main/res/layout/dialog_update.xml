@@ -26,7 +26,7 @@
             android:layout_marginRight="10dp"/>
         <EditText
             android:hint="이름"
-            android:id="@+id/upDateName"
+            android:id="@+id/updateName"
             android:layout_width="150dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
