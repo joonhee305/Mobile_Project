@@ -12,6 +12,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -55,9 +56,8 @@ public class MainActivity extends AppCompatActivity {
 //        sqLiteDatabase.close();
 
         //재시작 확인
-
-        prefs=getSharedPreferences("Pref",MODE_PRIVATE);
         checkFirstRun();
+
         //바 설정
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -135,14 +135,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkFirstRun(){
-        boolean isFirstRun=prefs.getBoolean("isFirstRun",true);
-        if(isFirstRun){
+        myHelper=new myDBHelper(this);
+        sqLiteDatabase=myHelper.getWritableDatabase();
+        Cursor checkcursor=sqLiteDatabase.rawQuery("select * from routineTBL",null);
+        if(checkcursor.getCount()==0){
             Intent newIntent=new Intent(getApplicationContext(),StartActivity.class);
             startActivity(newIntent);
             finish();
-
-            //두번째 실행부터 실행하지 않으려면 밑에 주석 해제
-            prefs.edit().putBoolean("isFirstRun",false).apply();
         }
     }
     public void checkPermission() {
