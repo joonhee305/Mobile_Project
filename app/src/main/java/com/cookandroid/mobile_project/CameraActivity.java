@@ -84,9 +84,11 @@ public class CameraActivity extends AppCompatActivity {
                     //저장
                     long now=System.currentTimeMillis();
                     Date date= new Date(now);
-                    SimpleDateFormat sdfHour=new SimpleDateFormat("hh");
+
+                    SimpleDateFormat sdfHour=new SimpleDateFormat("kk");
                     SimpleDateFormat sdfMinute=new SimpleDateFormat("mm");
                     int hTime=Integer.parseInt(sdfHour.format(date))*60+Integer.parseInt(sdfMinute.format(date));
+                    Log.d("time",sdfHour.format(date));
                     saveImg(picturePath);
                     mCurrentPhotoPath = ""; //initialize
                     sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tId = "+hData[3]+"");

@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         //날짜
         long now=System.currentTimeMillis();
         Date date= new Date(now);
-        SimpleDateFormat sdf=new SimpleDateFormat("MM월 dd일 EE");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy년 MM월 dd일 EE");
         String nowDate=sdf.format(date);
         titleDate=findViewById(R.id.titleDate);
         titleDate.setText(nowDate.toString());
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText("메인 화면"));
         tabs.addTab(tabs.newTab().setText("지난 일정"));
-        tabs.addTab(tabs.newTab().setText("루틴 수정"));
+//        tabs.addTab(tabs.newTab().setText("루틴 수정"));
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -94,9 +94,10 @@ public class MainActivity extends AppCompatActivity {
                     selected = mainFragment;
                 } else if(position == 1){
                     selected = historyFragment;
-                }else if(position == 2){
-                    selected = mainFragment;
                 }
+//                else if(position == 2){
+//                    selected = mainFragment;
+//                }
                 getSupportFragmentManager().beginTransaction().replace(R.id.container,selected).commit();
             }
 
