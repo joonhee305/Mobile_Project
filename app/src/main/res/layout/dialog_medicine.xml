@@ -8,7 +8,6 @@
         android:id="@+id/medTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/pill_info"
         android:text="약의 상세정보를 입력해주세요"
         android:textSize="25dp"
         android:layout_margin="10dp"/>
@@ -17,24 +16,24 @@
         android:id="@+id/svAddMed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/pill_scroll">
+        >
         <LinearLayout
             android:id="@+id/layoutAddMed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/Medicine_linear1"
+
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/Medicine_linear2"
+                android:id="@+id/addMedName"
                 android:orientation="vertical"
                 android:layout_margin="10dp">
                 <TextView
                     android:id="@+id/addMedTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pill_intake"
+
                     android:text="복용중인 약을 적어주세요"
                     android:textSize="25dp"/>
 
@@ -51,14 +50,14 @@
                 android:id="@+id/addMedDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/Medicine_table1"
+
                 android:layout_margin="10dp"
                 >
                 <TableRow>
                     <TextView
                         android:layout_weight="1"
                         android:layout_span="4"
-                        android:id="@+id/Medicine_day"
+                        android:id="@+id/addMedDateTitle"
                         android:text="복용 요일을 선택해주세요"
                         android:textSize="25dp"/>
                 </TableRow>
@@ -111,13 +110,13 @@
                 android:id="@+id/addMedTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/Medicine_linear3"
+
                 android:orientation="vertical"
                 android:layout_margin="10dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pill_time"
+                    android:id="@+id/addMedTimeTitle"
                     android:text="복용 시간을 선택해주세요"
                     android:textSize="25dp"/>
 <!--                <CheckBox-->
@@ -165,7 +164,7 @@
                 android:id="@+id/addMedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/Medicine_linear4"
+
                 android:orientation="horizontal"
                 android:layout_margin="10dp">
                 <Button
