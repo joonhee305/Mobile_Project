@@ -77,6 +77,7 @@ public class MainFragment extends Fragment {
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
         prefs= getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
+
 //        Intent intent = getActivity().getIntent();
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //        Cursor test=sqLiteDatabase.rawQuery("select * from historyTBL",null);
@@ -290,12 +291,31 @@ public class MainFragment extends Fragment {
                 btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Dialog delete;
+                        delete=new Dialog(getActivity());
+                        delete.setContentView(R.layout.dialog_delete);
+                        delete.show();
 
-                        sqLiteDatabase.execSQL("delete from toDayTBL where tId= ?;",new String[] {Integer.toString(tId)} );
+                        Button deleteYes=delete.findViewById(R.id.deleteYes);
+                        Button deleteNo=delete.findViewById(R.id.deleteNo);
 
-                        Intent mainActivity=new Intent(getActivity(),MainActivity.class);
-                        startActivity(mainActivity);
-                        getActivity().finish();
+                        deleteYes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sqLiteDatabase.execSQL("delete from toDayTBL where tId= ?;",new String[] {Integer.toString(tId)} );
+
+                                Intent mainActivity=new Intent(getActivity(),MainActivity.class);
+                                startActivity(mainActivity);
+                                delete.dismiss();
+                                getActivity().finish();
+                            }
+                        });
+                        deleteNo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                delete.dismiss();
+                            }
+                        });
                     }
                 });
 
