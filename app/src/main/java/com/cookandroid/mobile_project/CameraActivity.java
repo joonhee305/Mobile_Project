@@ -8,6 +8,7 @@ import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -35,21 +37,37 @@ public class CameraActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 10;
     public static final int REQUEST_PERMISSION = 11;
 
-    private Button btnCamera, btnSave;
+
+    private Button btnCamera, btnSave,btnCameraCancel;
     private ImageView ivCapture;
     private String mCurrentPhotoPath;
+    private String picturePath;
+    Intent getPath, mainActivity;
+    myDBHelper myDBHelper;
+    SQLiteDatabase sqLiteDatabase;
+    String[] hData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
+        mainActivity = new Intent(this, MainActivity.class);
         checkPermission(); //권한체크
+
+        myDBHelper=new myDBHelper(this);
+        sqLiteDatabase=myDBHelper.getWritableDatabase();
+
 
         ivCapture = findViewById(R.id.ivCapture); //ImageView 선언
         btnCamera = findViewById(R.id.btnCapture); //Button 선언
         btnSave = findViewById(R.id.btnSave); //Button 선언
+        btnCameraCancel = findViewById(R.id.btnCameraCancel);
 
-        // loadImgArr();
+        getPath=getIntent();
+        picturePath=getPath.getStringExtra("Path");
+        hData=getPath.getStringArrayExtra("tData");
+
+        //Toast.makeText(getApplicationContext(),getFilesDir().toString(),Toast.LENGTH_SHORT).show();
+        //loadImgArr();
 
         //촬영
         btnCamera.setOnClickListener(v -> captrueCamera());
@@ -66,29 +84,46 @@ public class CameraActivity extends AppCompatActivity {
                     Toast.makeText(this, "저장할 사진이 없습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     //저장
-                    saveImg();
+                    long now=System.currentTimeMillis();
+                    Date date= new Date(now);
+                    SimpleDateFormat sdfHour=new SimpleDateFormat("hh");
+                    SimpleDateFormat sdfMinute=new SimpleDateFormat("mm");
+                    int hTime=Integer.parseInt(sdfHour.format(date))*60+Integer.parseInt(sdfMinute.format(date));
+                    saveImg(picturePath);
                     mCurrentPhotoPath = ""; //initialize
+                    sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tId = "+hData[3]+"");
+                    sqLiteDatabase.execSQL("insert into historyTBL values('"+hData[0]+"','"+hData[1]+"','"+hData[2]+"','"+hTime+"','"+picturePath+"');");
+                    //Toast.makeText(this,"사진 저장!",Toast.LENGTH_SHORT).show();
+                    Intent mainActivity=new Intent(this,MainActivity.class);
+                    startActivity(mainActivity);
+                    finish();
                 }
 
             } catch (Exception e) {
                 Log.w(TAG, "SAVE ERROR!", e);
             }
         });
+
+        btnCameraCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(mainActivity);
+                finish();
+            }
+        });
     }
+
     private void captrueCamera(){
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager())!=null){
             File photoFile=null;
             try{
                 File tempDir=getCacheDir();
-
-                String timeStamp=new SimpleDateFormat("yyyyMMdd").format(new Date());
-                String imageFileName="Capture_"+timeStamp+"_";
-                File tempImage=File.createTempFile(imageFileName,".jpg",tempDir);
-
+                File tempImage=File.createTempFile(picturePath,".jpg",tempDir);
                 mCurrentPhotoPath=tempImage.getAbsolutePath();
-
                 photoFile=tempImage;
+                //Toast.makeText(getApplicationContext(),photoFile.getPath(),Toast.LENGTH_SHORT).show();
             }catch (IOException e) {
                 Log.w(TAG,"파일 생성 에러!",e);
             }
@@ -103,12 +138,12 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
-    private void saveImg(){
+    private void saveImg(String path){
         try{
             File storageDir=new File(getFilesDir()+"/capture");
             if(!storageDir.exists()) storageDir.mkdirs();
 
-            String filename="캡쳐파일"+".jpg";
+            String filename=path+".jpg";
 
             File file=new File(storageDir,filename);
             boolean deleted=file.delete();
@@ -131,10 +166,10 @@ public class CameraActivity extends AppCompatActivity {
                 }
             }
             Log.e(TAG, "Captured Saved");
-            Toast.makeText(this, "Capture Saved ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "인증 완료!", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
             Log.w(TAG, "Capture Saving Error!", e);
-            Toast.makeText(this, "Save failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "인증 실패", Toast.LENGTH_SHORT).show();
         }
     }
     private void loadImgArr() {
@@ -161,7 +196,10 @@ public class CameraActivity extends AppCompatActivity {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO: {
                     if (resultCode == RESULT_OK) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> e84b40f88254facd079b37777a88f0bad2717647
                         File file = new File(mCurrentPhotoPath);
                         Bitmap bitmap = MediaStore.Images.Media
                                 .getBitmap(getContentResolver(), Uri.fromFile(file));
@@ -171,10 +209,10 @@ public class CameraActivity extends AppCompatActivity {
                             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                     ExifInterface.ORIENTATION_UNDEFINED);
 
-//                            //사진해상도가 너무 높으면 비트맵으로 로딩
-//                            BitmapFactory.Options options = new BitmapFactory.Options();
-//                            options.inSampleSize = 8; //8분의 1크기로 비트맵 객체 생성
-//                            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+                            //사진해상도가 너무 높으면 비트맵으로 로딩
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inSampleSize = 8; //8분의 1크기로 비트맵 객체 생성
+                            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
                             Bitmap rotatedBitmap = null;
                             switch (orientation) {

@@ -2,7 +2,9 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -30,8 +33,7 @@ public class AddListActivity extends Activity {
     SetWidget setWidget;
     CheckBox chk_illjung, chk_pill;
     LinearLayout container, layoutTest;
-    Button btn_save;
-    TextView test;
+    Button btn_save,btn_cancel;
     Boolean boolToDo = false, boolPill = false;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
@@ -39,11 +41,14 @@ public class AddListActivity extends Activity {
     Integer breakfastTime,lunchTime,dinnerTime;
     CheckBox[] medDate, medTime;
     ArrayList<Medicine> medicines;
-    Intent mainActivity;
+    Intent mainActivity,mainFragment;
+    int idx;
+    public SharedPreferences prefs;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addlist);
+        prefs= getSharedPreferences("Pref", Context.MODE_PRIVATE);
         myHelper=new myDBHelper(this);
         medicines=new ArrayList<>();
 
@@ -59,7 +64,11 @@ public class AddListActivity extends Activity {
         dinnerTime=1080;
 
         mainActivity = new Intent(this, MainActivity.class);
+        mainFragment=getIntent();
+        idx=mainFragment.getIntExtra("idx",0);
 
+        //
+        // Toast.makeText(getApplicationContext(),idx+"",Toast.LENGTH_SHORT).show();
         //illjung
         LinearLayout linear_write_todo = new LinearLayout(this);
         linear_write_todo.setOrientation(LinearLayout.VERTICAL);
@@ -101,6 +110,7 @@ public class AddListActivity extends Activity {
         linear_tableRow1.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout linear_tableRow2 = new LinearLayout(this);
         linear_tableRow2.setOrientation(LinearLayout.HORIZONTAL);
+
 
         TextView tv_write_pill = new TextView(this);
         tv_write_pill.setText("복용하실 약을 적어주세요");
@@ -155,19 +165,19 @@ public class AddListActivity extends Activity {
         linear_pillName.addView(tv_write_pill);
         linear_pillName.addView(edt_piilName);
 
-        linear_tableRow1.addView(mon);
-        linear_tableRow1.addView(tue);
-        linear_tableRow1.addView(wed);
-        linear_tableRow1.addView(thur);
-
-        linear_tableRow2.addView(fri);
-        linear_tableRow2.addView(sat);
-        linear_tableRow2.addView(sun);
-        linear_tableRow2.addView(eve);
-
-        linear_tableLay.addView(tv_eat_date);
-        linear_tableLay.addView(linear_tableRow1);
-        linear_tableLay.addView(linear_tableRow2);
+//        linear_tableRow1.addView(mon);
+//        linear_tableRow1.addView(tue);
+//        linear_tableRow1.addView(wed);
+//        linear_tableRow1.addView(thur);
+//
+//        linear_tableRow2.addView(fri);
+//        linear_tableRow2.addView(sat);
+//        linear_tableRow2.addView(sun);
+//        linear_tableRow2.addView(eve);
+//
+//        linear_tableLay.addView(tv_eat_date);
+//        linear_tableLay.addView(linear_tableRow1);
+//        linear_tableLay.addView(linear_tableRow2);
 
         linear_pillTime.addView(tv_eat_time);
         linear_pillTime.addView(bfm);
@@ -184,8 +194,10 @@ public class AddListActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if(chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
+                if(chk_illjung.isChecked()==true){
+                    chk_pill.setChecked(false);
                     container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);
                     boolToDo = true;
@@ -193,13 +205,14 @@ public class AddListActivity extends Activity {
                 }
                 else if(chk_illjung.isChecked()==false && chk_pill.isChecked() == true){
                     container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_pillName);
-                    container.addView(linear_tableLay);
+//                    container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
                     boolToDo = false;
                     boolPill = true;
                 }
-                else {
+                else{
                     container.setVisibility(View.INVISIBLE);
                     container.removeAllViews();
                     boolToDo = false;
@@ -213,16 +226,19 @@ public class AddListActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if (chk_illjung.isChecked()==false && chk_pill.isChecked() == true){
-                    container.setVisibility(View.VISIBLE);
+                if(chk_pill.isChecked() == true){
+                    chk_illjung.setChecked(false);
+                    container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_pillName);
-                    container.addView(linear_tableLay);
+//                    container.addView(linear_tableLay);
                     container.addView(linear_pillTime);
                     boolToDo = false;
                     boolPill = true;
                 }
-                else if (chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
+                else if(chk_illjung.isChecked()==true && chk_pill.isChecked() == false){
                     container .setVisibility(View.VISIBLE);
+                    container.removeAllViews();
                     container.addView(linear_write_todo);
                     container.addView(linear_when_todo);
                     boolToDo = true;
@@ -242,7 +258,7 @@ public class AddListActivity extends Activity {
             public void onClick(View view) {
                 sqLiteDatabase=myHelper.getWritableDatabase();
                 if(boolToDo){
-                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"');");
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"',0,"+idx+");"); idx++;
                 }
                 else if(boolPill){
                     //출력값
@@ -279,18 +295,25 @@ public class AddListActivity extends Activity {
                                     case 5: mtime=dinnerTime+30; break;
                                     default: mtime=0; break;
                                 }
-                                sqLiteDatabase.execSQL("insert into toDayTBL values('복약','"+edt_piilName.getText()+"','"+mtime+"');");
+                                sqLiteDatabase.execSQL("insert into toDayTBL values('복약','"+edt_piilName.getText()+"','"+mtime+"',0,"+idx+");"); idx++;
                             }
                         }
                     }
                 }
+                prefs.edit().putInt("toDayIdx",idx).apply();
                 sqLiteDatabase.close();
                 startActivity(mainActivity);
                 finish();
             }
 
 
-
+        });
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(mainActivity);
+                finish();
+            }
         });
 
         set_time_todo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {

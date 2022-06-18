@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
@@ -39,7 +41,7 @@ import java.util.ListIterator;
 public class StartActivity extends Activity {
     public static Context context;
     SetWidget setWidget;
-    Button btnMedadd,btnMem,btnSave,btnCancle,btnReset,btnGet;
+    Button btnMedadd,btnMem,btnSave,btnCancle;
     EditText edtMedName;
     CheckBox chkBreakfast,chkLunch,chkDinner;
     CheckBox[] exerDate,medDate,medTime;
@@ -51,6 +53,7 @@ public class StartActivity extends Activity {
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
     Intent mainActivity;
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -73,8 +76,11 @@ public class StartActivity extends Activity {
         chkLunch=findViewById(R.id.chkLunch);
         chkDinner=findViewById(R.id.chkDinner);
         breakTimePicker=findViewById(R.id.breakTimePicker);
+        breakTimePicker.setHour(9); breakTimePicker.setMinute(0);
         lunchTimePicker=findViewById(R.id.lunchTimePicker);
+        lunchTimePicker.setHour(12); lunchTimePicker.setMinute(0);
         dinnerTimePicker=findViewById(R.id.dinnerTimePicker);
+        dinnerTimePicker.setHour(18); dinnerTimePicker.setMinute(0);
 
         breakTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
@@ -134,10 +140,9 @@ public class StartActivity extends Activity {
         btnMem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long now=System.currentTimeMillis();
-                Date key=new Date(now);
                 sqLiteDatabase=myHelper.getWritableDatabase();
-                myHelper.onUpgrade(sqLiteDatabase,1,2);
+                sqLiteDatabase.execSQL("delete from routineTBL");
+
                 if(chkBreakfast.isChecked()){
                     sqLiteDatabase.execSQL("insert into routineTBL values('식사','아침',127,'"+breakfastTime+"');");
                 }
@@ -166,7 +171,6 @@ public class StartActivity extends Activity {
                             sqLiteDatabase.execSQL("insert into routineTBL values('복약','"+medicine.name+"',"+medicine.dates+","+mtime+");");
                         }
                     }
-                    //sqLiteDatabase.execSQL("insert into routineTBL values('식사','"+medicine.name+"',"+medecine.times+",'"+breakfastTime+"'')");
                 }
 
                 int exerDates=0;
@@ -250,38 +254,8 @@ public class StartActivity extends Activity {
                 });
             }
         });
-        //불러오기
 
-        btnGet=findViewById(R.id.btnGet);
-        btnReset=findViewById(R.id.btnReset);
-        btnGet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout layoutTest=findViewById(R.id.layoutTest);
-                Cursor cursor;
-                sqLiteDatabase=myHelper.getWritableDatabase();
-                cursor=sqLiteDatabase.rawQuery("select * from routineTBL;",null);
-                while(cursor.moveToNext()){
-                    TextView ntextView=new TextView(StartActivity.this);
-                    String val="";
-                    for(int i=0;i<4;i++) val+=cursor.getString(i)+" ";
 
-                    ntextView.setText(val);
-                    layoutTest.addView(ntextView);
-                }
-                sqLiteDatabase.close();
-            }
-        });
-        //새로고침
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sqLiteDatabase=myHelper.getWritableDatabase();
-                myHelper.onUpgrade(sqLiteDatabase,1,2);
-                sqLiteDatabase.close();
-
-            }
-        });
     }
 
     public class SetWidget{

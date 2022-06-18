@@ -13,11 +13,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/testText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="테스트창"/>
+<!--            <TextView-->
+<!--                android:id="@+id/testText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="테스트창"/>-->
             <LinearLayout
                 android:id="@+id/layoutDoing"
                 android:layout_width="match_parent"
@@ -42,6 +42,13 @@
                     android:text="오늘의 운동"
                     android:textSize="23dp"
                     />
+                <Button
+                    android:id="@+id/btnExer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="초기화"
+                    />
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layoutMedicine"
@@ -61,6 +68,11 @@
                 android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:text="추가"/>
+            <ImageView
+                android:id="@+id/iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"/>
         </LinearLayout>
     </ScrollView>
 
