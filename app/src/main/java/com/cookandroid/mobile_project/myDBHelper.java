@@ -9,6 +9,7 @@ public class myDBHelper extends SQLiteOpenHelper {
         super(context, "groupDB",null,1);
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         //루틴 테이블 //타입, 이름, 요일, 시간
