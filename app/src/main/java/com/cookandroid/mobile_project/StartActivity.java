@@ -118,7 +118,7 @@ public class StartActivity extends Activity {
 
         //복약 레이아웃
         //약 추가
-        layoutMed=findViewById(R.id.layoutMed);
+        layoutMed=(LinearLayout) findViewById(R.id.layoutMed);
         btnMedadd=(Button) findViewById(R.id.btnMedAdd);
         medicines=new ArrayList<>();
 
@@ -244,6 +244,7 @@ public class StartActivity extends Activity {
                             m=new Medicine(name, dates, times);
                             medicines.add(m);
                             btnMed.setText(name);
+                            layoutMed.addView(btnMed);
                             addMed.dismiss();
                         }
 

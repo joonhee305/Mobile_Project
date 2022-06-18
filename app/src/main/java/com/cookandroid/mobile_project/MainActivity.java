@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText("메인 화면"));
         tabs.addTab(tabs.newTab().setText("지난 일정"));
-//        tabs.addTab(tabs.newTab().setText("루틴 수정"));
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -128,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent startActivity=new Intent(getApplicationContext(),StartActivity.class);
                 startActivity(startActivity);
+                Toast.makeText(getApplicationContext(),"변경된 루틴은 내일부터 적용됩니다.",Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
