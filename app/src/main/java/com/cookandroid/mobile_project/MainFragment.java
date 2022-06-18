@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,7 +78,8 @@ public class MainFragment extends Fragment {
 //        testText.setText(val);
         String lastDate=prefs.getString("lastDate"," ");
 
-
+        Intent addlist=getActivity().getIntent();
+        idx=prefs.getInt("toDayIdx",300);
         //날짜
         long now=System.currentTimeMillis();
         Date date= new Date(now);
@@ -115,7 +117,7 @@ public class MainFragment extends Fragment {
                 }
             }
             routineCursor.close();
-            prefs.edit().putInt("toDayIdx",idx);
+            prefs.edit().putInt("toDayIdx",idx).apply();
         }
         idx=prefs.getInt("toDayIdx",300);
         //데이터 삽입
@@ -185,7 +187,7 @@ public class MainFragment extends Fragment {
             btnSubParams.weight=2;
             btnSubParams.bottomMargin=10;
 
-            Button btnRemote=new Button(getActivity());
+            Button btnUpdate=new Button(getActivity());
             Button btnDelete=new Button(getActivity());
 
             //데이터 버튼 셋팅
@@ -200,7 +202,7 @@ public class MainFragment extends Fragment {
             String path=year+month+day+btn.getId();
             String[] tData={tType,tName,year+month+day,tId+""};
 
-            btnRemote.setText("수정");
+            btnUpdate.setText("수정");
             btnDelete.setText("삭제");
             if(tCheck==0){
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -216,10 +218,49 @@ public class MainFragment extends Fragment {
                 });
 
                 //수정 버튼
-                btnRemote.setOnClickListener(new View.OnClickListener() {
+                btnUpdate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Dialog dlgRemote;
+                        Dialog update;
+                        update=new Dialog(getActivity());
+                        update.setContentView(R.layout.dialog_update);
+                        update.show();
+
+                        Button updateSave=update.findViewById(R.id.updateSave);
+                        EditText updateName=update.findViewById(R.id.upDateName);
+                        EditText updateHour=update.findViewById(R.id.updateHour);
+                        EditText updateMinute=update.findViewById(R.id.updateMinute);
+                        updateSave.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String name=updateName.getText().toString();
+                                String hour=updateHour.getText().toString();
+                                String minute=updateMinute.getText().toString();
+                                int h,m,t;
+
+                                if(name.length()==0) Toast.makeText(getActivity(),"이름을 입력해주세요",Toast.LENGTH_SHORT).show();
+                                else{
+                                    try{
+                                        h=Integer.parseInt(hour);
+                                        m=Integer.parseInt(minute);
+                                        t=h*60+m;
+                                        sqLiteDatabase.execSQL("update toDayTBL set tName='"+name+"', tTime="+t+" where tId = "+tId+"");
+
+                                        Intent mainActivity=new Intent(getActivity(),MainActivity.class);
+                                        startActivity(mainActivity);
+                                        update.dismiss();
+                                        getActivity().finish();
+
+                                    }catch (Exception e){
+                                        Toast.makeText(getActivity(),"시간을 다시 입력해주세요",Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+
+
+                            }
+                        });
+                        //sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tName = "++"");
                     }
                 });
 
@@ -227,7 +268,10 @@ public class MainFragment extends Fragment {
                 btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sqLiteDatabase.execSQL("delete from toDayTBL where tId='"+ tId+"'",null);
+                        if(sqLiteDatabase==null) Toast.makeText(getActivity(),"없음",Toast.LENGTH_SHORT).show();
+                        else Toast.makeText(getActivity(),"있음", Toast.LENGTH_LONG).show();
+                        sqLiteDatabase.execSQL("delete from toDayTBL where tId= ?;",new String[] {Integer.toString(tId)} );
+
                         Intent mainActivity=new Intent(getActivity(),MainActivity.class);
                         startActivity(mainActivity);
                         getActivity().finish();
@@ -236,7 +280,7 @@ public class MainFragment extends Fragment {
 
                 //버튼 추가
                 newLayout.addView(btn,mLayoutParams);
-                newLayout.addView(btnRemote,btnSubParams);
+                newLayout.addView(btnUpdate,btnSubParams);
                 newLayout.addView(btnDelete,btnSubParams);
             }
             else{

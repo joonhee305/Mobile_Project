@@ -2,7 +2,9 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -42,10 +44,12 @@ public class AddListActivity extends Activity {
     ArrayList<Medicine> medicines;
     Intent mainActivity,mainFragment;
     int idx;
+    public SharedPreferences prefs;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addlist);
+        prefs= getSharedPreferences("Pref", Context.MODE_PRIVATE);
         myHelper=new myDBHelper(this);
         medicines=new ArrayList<>();
 
@@ -255,7 +259,7 @@ public class AddListActivity extends Activity {
             public void onClick(View view) {
                 sqLiteDatabase=myHelper.getWritableDatabase();
                 if(boolToDo){
-                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"',0,"+idx+");");
+                    sqLiteDatabase.execSQL("insert into toDayTBL values('일정','"+edt_write_todo.getText()+"','"+getTime+"',0,"+idx+");"); idx++;
                 }
                 else if(boolPill){
                     //출력값
@@ -296,11 +300,11 @@ public class AddListActivity extends Activity {
                         }
                     }
                 }
+                prefs.edit().putInt("toDayIdx",idx).apply();
                 sqLiteDatabase.close();
                 startActivity(mainActivity);
                 finish();
             }
-
 
 
         });
