@@ -6,12 +6,19 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
+    <TextView
+        android:text="사진을 찍어 인증해주세요!"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <ImageView
         android:id="@+id/ivCapture"
-        android:layout_width="500dp"
+        android:layout_width="400dp"
         android:layout_height="500dp"
-        android:padding="30dp" />
+        android:padding="30dp"
+        android:background="@drawable/defalut_pic"
+        android:layout_margin="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,13 +30,18 @@
             android:id="@+id/btnCapture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CAMERA" />
+            android:text="촬영하기" />
 
         <Button
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SAVE" />
+            android:text="인증하기" />
+        <Button
+            android:id="@+id/btnCameraCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="뒤로가기" />
     </LinearLayout>
 
 </LinearLayout>

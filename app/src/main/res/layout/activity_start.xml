@@ -178,29 +178,17 @@
                     android:timePickerMode="spinner">
                 </TimePicker>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/btnMem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:minHeight="32dp"
-                    android:text="기록" />
-                <Button
-                    android:id="@+id/btnReset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="32dp"
-                    android:text="초기화" />
-                <Button
-                    android:id="@+id/btnGet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="32dp"
-                    android:text="가져오기" />
-            </LinearLayout>
+                    android:text="기록"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="20dp"/>
+
+
             <LinearLayout
                 android:id="@+id/layoutTest"
                 android:layout_width="match_parent"
