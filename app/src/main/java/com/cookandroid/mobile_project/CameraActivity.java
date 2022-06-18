@@ -20,7 +20,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -39,8 +38,8 @@ public class CameraActivity extends AppCompatActivity {
     public static final int REQUEST_PERMISSION = 11;
 
 
-    private Button btnCameraCancel, btnSave;
-    private ImageButton ivCapture;
+    private Button btnCamera, btnSave,btnCameraCancel;
+    private ImageView ivCapture;
     private String mCurrentPhotoPath;
     private String picturePath;
     Intent getPath, mainActivity;
@@ -51,16 +50,17 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
+        mainActivity = new Intent(this, MainActivity.class);
         checkPermission(); //권한체크
 
         myDBHelper=new myDBHelper(this);
         sqLiteDatabase=myDBHelper.getWritableDatabase();
-        mainActivity = new Intent(this, MainActivity.class);
 
-        ivCapture = findViewById(R.id.ivCapture); //ImageButton 선언
-        btnCameraCancel = findViewById(R.id.btnCameraCancel); //Button 선언
+
+        ivCapture = findViewById(R.id.ivCapture); //ImageView 선언
+        btnCamera = findViewById(R.id.btnCapture); //Button 선언
         btnSave = findViewById(R.id.btnSave); //Button 선언
+        btnCameraCancel = findViewById(R.id.btnCameraCancel);
 
         getPath=getIntent();
         picturePath=getPath.getStringExtra("Path");
@@ -70,7 +70,7 @@ public class CameraActivity extends AppCompatActivity {
         //loadImgArr();
 
         //촬영
-        ivCapture.setOnClickListener(v -> captrueCamera());
+        btnCamera.setOnClickListener(v -> captrueCamera());
 
         //저장
         btnSave.setOnClickListener(v -> {
@@ -86,11 +86,9 @@ public class CameraActivity extends AppCompatActivity {
                     //저장
                     long now=System.currentTimeMillis();
                     Date date= new Date(now);
-
-                    SimpleDateFormat sdfHour=new SimpleDateFormat("kk");
+                    SimpleDateFormat sdfHour=new SimpleDateFormat("hh");
                     SimpleDateFormat sdfMinute=new SimpleDateFormat("mm");
                     int hTime=Integer.parseInt(sdfHour.format(date))*60+Integer.parseInt(sdfMinute.format(date));
-                    Log.d("time",sdfHour.format(date));
                     saveImg(picturePath);
                     mCurrentPhotoPath = ""; //initialize
                     sqLiteDatabase.execSQL("update toDayTBL set tCheck = 1 where tId = "+hData[3]+"");
@@ -115,6 +113,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
     }
+
     private void captrueCamera(){
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager())!=null){
@@ -206,10 +205,10 @@ public class CameraActivity extends AppCompatActivity {
                             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                     ExifInterface.ORIENTATION_UNDEFINED);
 
-//                            //사진해상도가 너무 높으면 비트맵으로 로딩
-//                            BitmapFactory.Options options = new BitmapFactory.Options();
-//                            options.inSampleSize = 8; //8분의 1크기로 비트맵 객체 생성
-//                            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+                            //사진해상도가 너무 높으면 비트맵으로 로딩
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inSampleSize = 8; //8분의 1크기로 비트맵 객체 생성
+                            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
                             Bitmap rotatedBitmap = null;
                             switch (orientation) {
