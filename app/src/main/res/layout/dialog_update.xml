@@ -19,7 +19,8 @@
         <TextView
             android:text="일정 이름"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
         <EditText
             android:hint="이름"
             android:id="@+id/upDateName"
@@ -31,11 +32,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:text="시"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:text="(xx)시"
+            android:gravity="center"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
         <EditText
-            android:hint="0~24(시)"
+            android:hint="0~24"
             android:id="@+id/updateHour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -45,11 +48,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:text="분"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:text="(xx)분"
+            android:gravity="center"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
         <EditText
-            android:hint="0~60(분)"
+            android:hint="0~60"
             android:id="@+id/updateMinute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
