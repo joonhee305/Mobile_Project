@@ -2,41 +2,24 @@ package com.cookandroid.mobile_project;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class StartActivity extends Activity {
     public static Context context;
@@ -199,7 +182,7 @@ public class StartActivity extends Activity {
             public void onClick(View v) {
                 Dialog addMed;
                 addMed=new Dialog(StartActivity.this);
-                addMed.setContentView(R.layout.activity_medicine);
+                addMed.setContentView(R.layout.dialog_medicine);
                 addMed.show();
                 //약 이름
                 edtMedName=addMed.findViewById(R.id.edtMedName);
