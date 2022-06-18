@@ -18,7 +18,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,11 +39,11 @@ public class CameraActivity extends AppCompatActivity {
     public static final int REQUEST_PERMISSION = 11;
 
 
-    private Button btnCamera, btnSave;
-    private ImageView ivCapture;
+    private Button btnCameraCancel, btnSave;
+    private ImageButton ivCapture;
     private String mCurrentPhotoPath;
     private String picturePath;
-    Intent getPath;
+    Intent getPath, mainActivity;
     myDBHelper myDBHelper;
     SQLiteDatabase sqLiteDatabase;
     String[] hData;
@@ -54,10 +56,10 @@ public class CameraActivity extends AppCompatActivity {
 
         myDBHelper=new myDBHelper(this);
         sqLiteDatabase=myDBHelper.getWritableDatabase();
+        mainActivity = new Intent(this, MainActivity.class);
 
-
-        ivCapture = findViewById(R.id.ivCapture); //ImageView 선언
-        btnCamera = findViewById(R.id.btnCapture); //Button 선언
+        ivCapture = findViewById(R.id.ivCapture); //ImageButton 선언
+        btnCameraCancel = findViewById(R.id.btnCameraCancel); //Button 선언
         btnSave = findViewById(R.id.btnSave); //Button 선언
 
         getPath=getIntent();
@@ -68,7 +70,7 @@ public class CameraActivity extends AppCompatActivity {
         //loadImgArr();
 
         //촬영
-        btnCamera.setOnClickListener(v -> captrueCamera());
+        ivCapture.setOnClickListener(v -> captrueCamera());
 
         //저장
         btnSave.setOnClickListener(v -> {
@@ -101,6 +103,15 @@ public class CameraActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.w(TAG, "SAVE ERROR!", e);
+            }
+        });
+
+        btnCameraCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(mainActivity);
+                finish();
             }
         });
     }
