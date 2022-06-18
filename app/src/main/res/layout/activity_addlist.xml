@@ -2,26 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/AddListActivity"
     android:orientation="vertical">
-
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/AddList_Scroll">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/AddList_Linear1"
             android:orientation="vertical">
             <TextView
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/AddList_Category"
                 android:text="카테고리를 선택해주세요"
                 android:textSize="25dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/AddList_Linear2"
                 android:orientation="horizontal">
                 <CheckBox
                     android:id="@+id/check_illjung"
@@ -50,6 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:id="@+id/AddList_Linear3"
                 android:layout_margin="10dp">
                 <Button
                     android:id="@+id/btn_save"

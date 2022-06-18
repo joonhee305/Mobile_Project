@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/MainFragment"
     tools:context=".MainFragment">
-
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/Fragment1">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/Framgent_Linear1"
             android:orientation="vertical">
 <!--            <TextView-->
 <!--                android:id="@+id/testText"-->
@@ -25,6 +27,7 @@
                 android:orientation="vertical">
                 <TextView
                     android:gravity="center"
+                    android:id="@+id/diary"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="일정"
@@ -39,6 +42,7 @@
                 android:orientation="vertical">
                 <TextView
                     android:gravity="center"
+                    android:id="@+id/exercise"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="오늘의 운동"
@@ -59,6 +63,7 @@
                 android:orientation="vertical">
                 <TextView
                     android:gravity="center"
+                    android:id="@+id/IntakePill"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="복용약"

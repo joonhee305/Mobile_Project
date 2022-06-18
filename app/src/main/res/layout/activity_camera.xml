@@ -5,9 +5,11 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    android:id="@+id/CameraActivity"
     tools:context=".MainActivity">
     <TextView
         android:text="사진을 찍어 인증해주세요!"
+        android:id="@+id/certify"
         android:textSize="30dp"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -24,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:id="@+id/Camera_Linear1"
         android:orientation="horizontal">
 
         <Button
