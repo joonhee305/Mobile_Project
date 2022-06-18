@@ -3,11 +3,15 @@ package com.cookandroid.mobile_project;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -15,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -24,6 +29,8 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     // 송지민이 추가한 메인 화면의 툴바와 프레그먼트
+
+    public static final int REQUEST_PERMISSION = 11;
     Toolbar toolbar;
     MainFragment mainFragment;
     HistoryFragment historyFragment;
@@ -38,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermission(); //권한체크
         // 송지민이 추가한 프레그먼트 관련 코드
 
 //        데베 수정후 첫실행 할 때 초기화
@@ -102,16 +110,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //리셋
-        reset = (Button) findViewById(R.id.btnReset);
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prefs.edit().putString("lastDate"," ").apply();
-                prefs.edit().putBoolean("isFirstRun",true).apply();
-            }
-        });
-
+//        //리셋
+//        reset = (Button) findViewById(R.id.btnReset);
+//        reset.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                prefs.edit().putString("lastDate"," ").apply();
+//                prefs.edit().putBoolean("isFirstRun",true).apply();
+//            }
+//        });
+//
+        //루틴 수정 버튼
         btnResetRoutine = (Button) findViewById(R.id.btnResetRoutine);
         btnResetRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,5 +144,23 @@ public class MainActivity extends AppCompatActivity {
             prefs.edit().putBoolean("isFirstRun",false).apply();
         }
     }
+    public void checkPermission() {
+        int permissionCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int permissionRead = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionWrite = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+        //권한이 없으면 권한 요청
+        if (permissionCamera != PackageManager.PERMISSION_GRANTED
+                || permissionRead != PackageManager.PERMISSION_GRANTED
+                || permissionWrite != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                Toast.makeText(this, "이 앱을 실행하기 위해 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+
+        }
+    }
 }

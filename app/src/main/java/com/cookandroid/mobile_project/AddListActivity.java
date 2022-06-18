@@ -67,7 +67,8 @@ public class AddListActivity extends Activity {
         mainFragment=getIntent();
         idx=mainFragment.getIntExtra("idx",0);
 
-        Toast.makeText(getApplicationContext(),idx+"",Toast.LENGTH_SHORT).show();
+        //
+        // Toast.makeText(getApplicationContext(),idx+"",Toast.LENGTH_SHORT).show();
         //illjung
         LinearLayout linear_write_todo = new LinearLayout(this);
         linear_write_todo.setOrientation(LinearLayout.VERTICAL);

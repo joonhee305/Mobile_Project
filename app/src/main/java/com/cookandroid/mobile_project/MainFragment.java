@@ -47,12 +47,12 @@ public class MainFragment extends Fragment {
     HashMap<String,Integer> mapDate;
     String month,day,d,nowDate,year;
     LinearLayout layoutDoing, layoutExercise,layoutMedicine;
-    TextView testText;
+    //TextView testText;
     Button btnExer;
     int idx=300;
     public SharedPreferences prefs;
-    public ImageView iv;
-    int layoutIdx=1000;
+    //public ImageView iv;
+    //int layoutIdx=1000;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
@@ -66,10 +66,10 @@ public class MainFragment extends Fragment {
 
 
 
-        testText=v.findViewById(R.id.testText);
-        layoutDoing=v.findViewById(R.id.layoutDoing);
-        layoutExercise=v.findViewById(R.id.layoutExercise);
-        layoutMedicine=v.findViewById(R.id.layoutMedicine);
+        //testText=(TextView) v.findViewById(R.id.testText);
+        layoutDoing=(LinearLayout) v.findViewById(R.id.layoutDoing);
+        layoutExercise=(LinearLayout) v.findViewById(R.id.layoutExercise);
+        layoutMedicine=(LinearLayout) v.findViewById(R.id.layoutMedicine);
         btnExer = (Button) v.findViewById(R.id.btnExer);
 
         mapDate=new HashMap<String,Integer>();
@@ -77,7 +77,6 @@ public class MainFragment extends Fragment {
         myHelper=new myDBHelper(getActivity());
         sqLiteDatabase=myHelper.getWritableDatabase();
         prefs= getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
-        iv=getActivity().findViewById(R.id.iv);
 //        Intent intent = getActivity().getIntent();
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //        Cursor test=sqLiteDatabase.rawQuery("select * from historyTBL",null);
@@ -157,7 +156,7 @@ public class MainFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddListActivity.class);
                 intent.putExtra("idx",idx);
-                Toast.makeText(getActivity(),idx+"",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),idx+"",Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 getActivity().finish();
 
@@ -195,7 +194,6 @@ public class MainFragment extends Fragment {
         Cursor toDayCursor=sqLiteDatabase.rawQuery(query,null);
         while(toDayCursor.moveToNext()){
             LinearLayout newLayout=new LinearLayout(getActivity());
-            newLayout.setId(layoutIdx++);
             newLayout.setOrientation(LinearLayout.HORIZONTAL);
             LinearLayout.LayoutParams mLayoutParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             mLayoutParams.rightMargin=5;
@@ -347,12 +345,13 @@ public class MainFragment extends Fragment {
 
                     }
                 });
+                newLayout.addView(btn,mLayoutParams);
             }
-            LinearLayout.LayoutParams btnParams=(LinearLayout.LayoutParams) btn.getLayoutParams();
-            btnParams.bottomMargin=10;
-            btnParams.leftMargin=5;
-            btnParams.rightMargin=5;
-            btn.setLayoutParams(btnParams);
+//            LinearLayout.LayoutParams btnParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+//            btnParams.bottomMargin=10;
+//            btnParams.leftMargin=5;
+//            btnParams.rightMargin=5;
+//            btn.setLayoutParams(btnParams);
 
             layout.addView(newLayout,mLayoutParams);
         }
