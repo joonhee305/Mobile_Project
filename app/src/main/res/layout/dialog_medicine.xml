@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <TextView
+        android:id="@+id/medTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="약의 상세정보를 입력해주세요"
@@ -11,9 +12,11 @@
         android:layout_margin="10dp"/>
 
     <ScrollView
+        android:id="@+id/svAddMed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/layoutAddMed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -23,6 +26,7 @@
                 android:orientation="vertical"
                 android:layout_margin="10dp">
                 <TextView
+                    android:id="@+id/addMedTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="복용중인 약을 적어주세요"
@@ -38,6 +42,7 @@
             </LinearLayout>
 
             <TableLayout
+                android:id="@+id/addMedDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -95,6 +100,7 @@
                 </TableRow>
             </TableLayout>
             <LinearLayout
+                android:id="@+id/addMedTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -146,6 +152,7 @@
 <!--                    android:text="자기전"/>-->
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/addMedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

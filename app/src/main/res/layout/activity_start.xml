@@ -4,8 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/layoutStartActivity"
     tools:context=".MainActivity">
     <TextView
+        android:id="@+id/startTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="어서오세요!\n당신의 하루 일상을 적어주세요"
@@ -13,9 +15,11 @@
         android:layout_margin="10dp"/>
 
     <ScrollView
+        android:id="@+id/svStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/startLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -25,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/dietTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
@@ -32,6 +37,7 @@
                     android:layout_margin="5dp"/>
 
                 <TableLayout
+                    android:id="@+id/medicineDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp">
@@ -82,11 +88,13 @@
                 </TableLayout>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/layoutMedicine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical">
                 <TextView
+                    android:id="@+id/medTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
@@ -111,12 +119,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/exerTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
                     android:text="운동은 얼마나 자주 하시나요?"
                     android:layout_margin="5dp"/>
                 <TableLayout
+                    android:id="@+id/exerDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp">
@@ -166,6 +176,7 @@
                     </TableRow>
                 </TableLayout>
                 <TextView
+                    android:id="@+id/exerTimeTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
@@ -178,7 +189,6 @@
                     android:timePickerMode="spinner">
                 </TimePicker>
             </LinearLayout>
-
                 <Button
                     android:id="@+id/btnMem"
                     android:layout_width="match_parent"
@@ -189,13 +199,13 @@
                     android:layout_marginVertical="20dp"/>
 
 
-            <LinearLayout
-                android:id="@+id/layoutTest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/layoutTest"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
         </LinearLayout>
     </ScrollView>
 

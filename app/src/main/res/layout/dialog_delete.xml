@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <TextView
+        android:id="@+id/deleteTitle"
         android:textSize="20dp"
         android:text="삭제하시겠습니까?"
         android:gravity="center"
@@ -12,6 +13,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"/>
     <LinearLayout
+        android:id="@+id/deleteLayout"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="match_parent"
