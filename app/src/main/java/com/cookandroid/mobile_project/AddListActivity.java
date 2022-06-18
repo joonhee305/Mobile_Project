@@ -321,6 +321,7 @@ public class AddListActivity extends Activity {
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(mainActivity);
                 finish();
             }
         });
