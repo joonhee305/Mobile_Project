@@ -265,7 +265,7 @@ public class AddListActivity extends Activity {
                     //시간 배열
                     int times=0;
                     //약 데이터
-                     Medicine m;
+                    Medicine m;
 
                     //요일 처리
                     for(int i=0;i<7;i++){
@@ -322,18 +322,6 @@ public class AddListActivity extends Activity {
     }
 
     public class SetWidget{
-        void matchCheckBox(CheckBox[] checkBoxes,int[] id){
-            int len=checkBoxes.length;
-            for(int i=0;i<len;i++){
-                checkBoxes[i]=findViewById(id[i]);
-            }
-        }
-        void matchCheckBox(CheckBox[] checkBoxes,int[] id,Dialog dialog){
-            int len=checkBoxes.length;
-            for(int i=0;i<len;i++){
-                checkBoxes[i]=dialog.findViewById(id[i]);
-            }
-        }
         void setCheckBox(CheckBox[] checkBoxes){
             int len=checkBoxes.length;
             for(int i=0;i<len;i++){
@@ -366,10 +354,6 @@ public class AddListActivity extends Activity {
             });
         }
         void setDate(CheckBox[] date) {
-            setCheckBox(date);
-        }
-        void setDate(CheckBox[] date, int[] id, Dialog dialog ){
-            matchCheckBox(date,id,dialog);
             setCheckBox(date);
         }
     }
