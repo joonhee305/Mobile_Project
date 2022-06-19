@@ -252,7 +252,7 @@ public class MainFragment extends Fragment {
 
                         Button updateSave=update.findViewById(R.id.updateSave);
                         Button updateCancel=update.findViewById(R.id.updateCancel);
-                        EditText updateName=update.findViewById(R.id.upDateName);
+                        EditText updateName=update.findViewById(R.id.updateName);
                         EditText updateHour=update.findViewById(R.id.updateHour);
                         EditText updateMinute=update.findViewById(R.id.updateMinute);
 

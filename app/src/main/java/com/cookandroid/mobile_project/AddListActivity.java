@@ -57,7 +57,6 @@ public class AddListActivity extends Activity {
         chk_pill = (CheckBox) findViewById(R.id.check_pill);
         btn_save = (Button) findViewById(R.id.btn_save);
         btn_cancel=(Button) findViewById(R.id.btn_cancel);
-        layoutTest = (LinearLayout) findViewById(R.id.layoutTest);
 
         breakfastTime=540;
         lunchTime=720;

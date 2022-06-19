@@ -40,20 +40,13 @@ public class MainActivity extends AppCompatActivity {
     TextView titleDate;
     SQLiteDatabase sqLiteDatabase;
     SQLiteOpenHelper myHelper;
-    // 여기까지
+
     public SharedPreferences prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission(); //권한체크
-        // 송지민이 추가한 프레그먼트 관련 코드
-
-//        데베 수정후 첫실행 할 때 초기화
-//        myHelper=new myDBHelper(this);
-//        sqLiteDatabase=myHelper.getWritableDatabase();
-//        myHelper.onUpgrade(sqLiteDatabase,1,2);
-//        sqLiteDatabase.close();
 
         //재시작 확인
         checkFirstRun();

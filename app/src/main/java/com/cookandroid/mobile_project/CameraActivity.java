@@ -67,9 +67,6 @@ public class CameraActivity extends AppCompatActivity {
         picturePath=getPath.getStringExtra("Path");
         hData=getPath.getStringArrayExtra("tData");
 
-        //Toast.makeText(getApplicationContext(),getFilesDir().toString(),Toast.LENGTH_SHORT).show();
-        //loadImgArr();
-
         //촬영
         btnCamera.setOnClickListener(v -> captrueCamera());
 
@@ -177,21 +174,6 @@ public class CameraActivity extends AppCompatActivity {
     }
 
 
-//    private void loadImgArr() {
-//        try {
-//
-//            File storageDir = new File(getFilesDir() + "/capture");
-//            String filename = "캡쳐파일" + ".jpg";
-//
-//            File file = new File(storageDir, filename);
-//            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
-//            ivCapture.setImageBitmap(bitmap);
-//
-//        } catch (Exception e) {
-//            Log.w(TAG, "Capture loading Error!", e);
-//            Toast.makeText(this, "load failed", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

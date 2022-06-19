@@ -44,22 +44,17 @@ public class StartActivity extends Activity {
 
         //저장 후 다시 시작할 액티비티
         mainActivity = new Intent(this, MainActivity.class);
-
         //데이터베이스 커넥션
         myHelper=new myDBHelper(this);
-
         //위젯용 함수
         setWidget=new SetWidget();
-
         //기록하기
         btnMem=(Button) findViewById(R.id.btnMem);
-
         //식사 레이아웃
         //아침 점심 저녁, defalut
         breakfastTime=540;
         lunchTime=720;
         dinnerTime=1080;
-
         //식사 관련 위젯 선언
         chkBreakfast=findViewById(R.id.chkBreakfast);
         chkLunch=findViewById(R.id.chkLunch);
