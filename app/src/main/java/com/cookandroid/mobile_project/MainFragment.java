@@ -45,7 +45,7 @@ public class MainFragment extends Fragment {
     //운동 리스트 선언
     private String[] youtubeURL = {"https://www.youtube.com/watch?v=lXUEMdde9hM","https://www.youtube.com/watch?v=I4ovzV-BLDU&t=529s",
             "https://www.youtube.com/watch?v=U_Tv31zKYkk","https://www.youtube.com/watch?v=WTVoxQUbcGo&t=41s",
-            "https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=q-ySRwLEwY4"};
+            "https://www.youtube.com/watch?v=NABkYV6IWYA","https://www.youtube.com/watch?v=4zDk16TJUnk","https://www.youtube.com/watch?v=q-ySRwLEwY4"};
     private String[] exerName = {"걷기운동","근력강화운동","아령운동","타바타운동","하체강화운동","찔레꽃운동","손가락운동"};
     private SQLiteDatabase sqLiteDatabase;
     private SQLiteOpenHelper myHelper;
